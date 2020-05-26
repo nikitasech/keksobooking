@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Никита Сечной](https://up.htmlacademy.ru/javascript/20/user/645003).
-* Наставник: `Неизвестно`.
+* Наставник: [Максим Кузнецов](https://up.htmlacademy.ru/javascript/20/user/619205).
 
 ---
 
