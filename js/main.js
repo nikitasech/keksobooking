@@ -21,23 +21,23 @@ function getRandomNumber(min, max) {
 function getRandomArray(array) {
   var newArray = array.slice(0);
 
-	for(var i = newArray.length - 1; i > 0; i--){
-		var j = Math.floor(Math.random() * (i + 1)); // Выбираем случайное число (0 ≤ j ≤ i)
-		var swap = newArray[j]; // Записываем содержимое массива под индексом j в переменную
-		newArray[j] = newArray[i]; // Под индексом j записываем значение индекса i
-		newArray[i] = swap; // А под индексом i записываем сохранённое значение индекса j
+  for (var i = newArray.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1)); // Выбираем случайное число (0 ≤ j ≤ i)
+    var swap = newArray[j]; // Записываем содержимое массива под индексом j в переменную
+    newArray[j] = newArray[i]; // Под индексом j записываем значение индекса i
+    newArray[i] = swap; // А под индексом i записываем сохранённое значение индекса j
   }
 
   var randomNumber = getRandomNumber(0, newArray.length); // Берём случайное число
   newArray = newArray.slice(randomNumber); // Убираем из массива случайное кол-во элементов
 
-	return newArray;
+  return newArray;
 }
 
 function Ad(avatarUrl, title, address, price, type, rooms, guests, checkin, checkout, features, description, photos, x, y) {
   this.author = {
     avatar: avatarUrl,
-  },
+  };
 
   this.offer = {
     title: title,
@@ -51,13 +51,13 @@ function Ad(avatarUrl, title, address, price, type, rooms, guests, checkin, chec
     features: features,
     description: description,
     photos: photos,
-  },
+  };
 
   this.location = {
     x: x,
     y: y,
-  }
-};
+  };
+}
 
 function getAd(numberAd) {
   var avatarUrl = 'img/avatars/user0' + numberAd + '.png'; // Генерируем ссылку на аватарку
@@ -75,7 +75,7 @@ function getAd(numberAd) {
   var y = getRandomNumber(130, 630); // Случайная координата по вертикали
   var address = x + ', ' + y;
 
-  return new Ad (avatarUrl, title, address, price, type, rooms, guests, checkin, checkout, features, description, photos, x, y); // Возвращаем готовое объявление
+  return new Ad(avatarUrl, title, address, price, type, rooms, guests, checkin, checkout, features, description, photos, x, y); // Возвращаем готовое объявление
 }
 
 function getAds(quantity) {
