@@ -74,7 +74,7 @@ function getAds(quantity) {
   return ads; // Возвращаем массив
 }
 
-function createPin(object) {
+function createPinElement(object) {
   var template = document.querySelector('#pin')
   .content
   .querySelector('.map__pin');
@@ -91,7 +91,7 @@ function createPin(object) {
   return pinElement; // Возвращаем объявление
 }
 
-function renderPins(arrayElements, container) {
+function renderPinsElements(arrayElements, container) {
   var fragment = document.createDocumentFragment(); // Создаём фрагмент
 
   for (var ad = 0; ad < arrayElements.length; ad++) {
@@ -104,5 +104,5 @@ function renderPins(arrayElements, container) {
 map.element.classList.remove('map--faded');
 
 var ads = getAds(8); // Создаём массив объявлений
-var pinsElements = ads.map(createPin); // Формируем массив меток
-renderPins(pinsElements, map.pinsContainer); // Отрисовываем тетки
+var pinsElements = ads.map(createPinElement); // Формируем массив элементов меток
+renderPinsElements(pinsElements, map.pinsContainer); // Отрисовываем тетки
