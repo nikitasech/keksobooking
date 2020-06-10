@@ -5,6 +5,8 @@ var NUMBER_ADS = 8;
 var map = {
   element: document.querySelector('.map'),
   pinsContainer: document.querySelector('.map__pins'),
+  Y_TOP_LIMIT: 130,
+  Y_BOTTOM_LIMIT: 630,
 };
 
 var Data = {
@@ -37,7 +39,7 @@ function getRandomArray(array) {
 function getAd(numberAd) {
   var numberAvatar = numberAd < 10 ? '0' + numberAd : numberAd;
   var x = getRandomNumber(0, map.pinsContainer.clientWidth); // Случайная координата по горизонтали
-  var y = getRandomNumber(130, 630); // Случайная координата по вертикали
+  var y = getRandomNumber(map.Y_TOP_LIMIT, map.Y_BOTTOM_LIMIT); // Случайная координата по вертикали
 
   return {
     author: {
