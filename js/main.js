@@ -2,14 +2,12 @@
 
 var map = {
   element: document.querySelector('.map'),
-  pinsElement: document.querySelector('.map__pins'),
-
+  pinsContainer: document.querySelector('.map__pins'),
 };
 
-var data = {
+var Data = {
   types: ['palace', 'flat', 'house', 'bungalo'],
-  checkins: ['12:00', '13:00', '14:00'],
-  checkouts: ['12:00', '13:00', '14:00'],
+  checkinsAndCheckouts: ['12:00', '13:00', '14:00'],
   features: ['wifi', 'dishwasher', 'parking', 'washer'],
   photos: ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'],
 };
@@ -34,48 +32,34 @@ function getRandomArray(array) {
   return newArray;
 }
 
-function Ad(avatarUrl, title, address, price, type, rooms, guests, checkin, checkout, features, description, photos, x, y) {
-  this.author = {
-    avatar: avatarUrl,
-  };
-
-  this.offer = {
-    title: title,
-    address: address,
-    price: price,
-    type: type,
-    rooms: rooms,
-    guests: guests,
-    checkin: checkin,
-    checkout: checkout,
-    features: features,
-    description: description,
-    photos: photos,
-  };
-
-  this.location = {
-    x: x,
-    y: y,
-  };
-}
-
 function getAd(numberAd) {
-  var avatarUrl = 'img/avatars/user0' + numberAd + '.png'; // Генерируем ссылку на аватарку
-  var title = 'Заголовок объявления';
-  var price = getRandomNumber(500, 10000); // Генерируем случайную цену
-  var type = data.types[getRandomNumber(0, data.types.length)]; // Выбираем случайный тип объявления
-  var rooms = getRandomNumber(1, 100); // Генерируем случайное кол-во комнат
-  var guests = getRandomNumber(0, 3); // Генерируем случайное кол-во гостей
-  var checkin = data.checkins[getRandomNumber(0, data.checkins.length)]; // Случайно выбираем дату заезда
-  var checkout = data.checkouts[getRandomNumber(0, data.checkouts.length)]; // И дату выезда
-  var features = getRandomArray(data.features); // Случайно генерируем особенности
-  var description = 'Описание объявления';
-  var photos = getRandomArray(data.photos); // Случайно генерируем фото
-  var x = getRandomNumber(0, map.pinsElement.clientWidth); // Случайная координата по горизонтали
+  var x = getRandomNumber(0, map.pinsContainer.clientWidth); // Случайная координата по горизонтали
   var y = getRandomNumber(130, 630); // Случайная координата по вертикали
-  var address = x + ', ' + y;
 
-  return new Ad(avatarUrl, title, address, price, type, rooms, guests, checkin, checkout, features, description, photos, x, y); // Возвращаем готовое объявление
+  return {
+    author: {
+      avatar: 'img/avatars/user0' + numberAd + '.png', // Генерируем ссылку на аватарку
+    },
+
+    offer: {
+      title: 'Заголовок объявления',
+      address: x + ', ' + y,
+      price: getRandomNumber(500, 10000), // Генерируем случайную цену
+      type: Data.types[getRandomNumber(0, Data.types.length)], // Выбираем случайный тип объявления
+      rooms: getRandomNumber(1, 100), // Генерируем случайное кол-во комнат
+      guests: getRandomNumber(0, 3), // Генерируем случайное кол-во гостей
+      checkin: Data.checkinsAndCheckouts[getRandomNumber(0, Data.checkinsAndCheckouts.length)], // Случайно выбираем дату заезда
+      checkout: Data.checkinsAndCheckouts[getRandomNumber(0, Data.checkinsAndCheckouts.length)], // Случайно выбираем дату выезда
+      features: getRandomArray(Data.features), // Случайно генерируем особенности
+      description: 'Описание объявления',
+      photos: getRandomArray(Data.photos), // Случайно генерируем фото
+    },
+
+    location: {
+      x: x,
+      y: y,
+    },
+  };
 }
 
 function getAds(quantity) {
@@ -90,7 +74,7 @@ function getAds(quantity) {
   return ads; // Возвращаем массив
 }
 
-function createAd(object) {
+function createPin(object) {
   var template = document.querySelector('#pin')
   .content
   .querySelector('.map__pin');
@@ -107,17 +91,7 @@ function createAd(object) {
   return pinElement; // Возвращаем объявление
 }
 
-function createAds(array) {
-  var adsElements = []; // Создаём массив для объявлений
-
-  for (var ad = 0; ad < array.length; ad++) {
-    adsElements.push(createAd(array[ad])); // Вставляем в массив объявление
-  }
-
-  return adsElements; // Возвращаем массив
-}
-
-function renderAds(arrayElements, container) {
+function renderPins(arrayElements, container) {
   var fragment = document.createDocumentFragment(); // Создаём фрагмент
 
   for (var ad = 0; ad < arrayElements.length; ad++) {
@@ -129,6 +103,6 @@ function renderAds(arrayElements, container) {
 
 map.element.classList.remove('map--faded');
 
-var ads = getAds(8);
-var adsElements = createAds(ads);
-renderAds(adsElements, map.pinsElement);
+var ads = getAds(8); // Создаём массив объявлений
+var pinsElements = ads.map(createPin); // Формируем массив меток
+renderPins(pinsElements, map.pinsContainer); // Отрисовываем тетки
