@@ -14,6 +14,12 @@ var Data = {
   checks: ['12:00', '13:00', '14:00'],
   features: ['wifi', 'dishwasher', 'parking', 'washer'],
   photos: ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'],
+  TypesTranslate: {
+    'palace': 'Дворец',
+    'flat': 'Квартира',
+    'house': 'Дом',
+    'bungalo': 'Бунгало',
+  },
 };
 
 function getRandomNumber(min, max) {
@@ -79,6 +85,14 @@ function getAds(quantity) {
   return ads; // Возвращаем массив
 }
 
+function getCards(quantity) {
+  var cards = [];
+
+  for (var card = 0; card < quantity; card++) {
+    cards.push
+  }
+}
+
 function createPinElement(object) {
   var template = document.querySelector('#pin')
   .content
@@ -96,6 +110,37 @@ function createPinElement(object) {
   return pinElement; // Возвращаем объявление
 }
 
+function createCardElement(object) {
+  var template = document.querySelector('#card')
+  .content
+  .querySelector('.map__card');
+
+  var cardElement = template.cloneNode(true);
+  var cardTitleElement = cardElement.querySelector('.popup__title');
+  var cardAddressElement = cardElement.querySelector('.popup__text--address');
+  var cardPriceElement = cardElement.querySelector('.popup__text--price');
+  var cardTypeElement = cardElement.querySelector('.popup__type');
+  var cardCapacityElement = cardElement.querySelector('.popup__text--capacity');
+  var cardTimeElement = cardElement.querySelector('.popup__text--time');
+  var cardFeatureselement = cardElement.querySelector('.popup__features');
+  var cardDescriptionElement = cardElement.querySelector('.popup__description');
+  var cardPhotosElement = cardElement.querySelector('.popup__photos');
+  var cardAvatarElement = cardElement.querySelector('.popup__avatar');
+
+  cardTitleElement.textContent = object.offer.title;
+  cardAddressElement.textContent = object.offer.address;
+  cardPriceElement.textContent = object.offer.price + '₽/ночь';
+  cardTypeElement.textContent = Data.TypesTranslate[object.offer.type];
+  cardCapacityElement.textContent = object.offer.rooms + ' комнаты для ' + object.offer.guests + ' гостей';
+  cardTimeElement.textContent = 'заезд после ' + object.offer.checkin + ', выезд до' + object.offer.checkout;
+  cardFeatureselement.textContent = '**Удобства**';
+  cardDescriptionElement.textContent = object.offer.description;
+  cardPhotosElement.textContent = '**Фотографии**';
+  cardAvatarElement.src = object.author.avatar;
+
+  return cardElement;
+}
+
 function renderElements(arrayElements, container) {
   var fragment = document.createDocumentFragment(); // Создаём фрагмент
 
@@ -111,3 +156,6 @@ map.element.classList.remove('map--faded');
 var ads = getAds(NUMBER_ADS); // Создаём массив объявлений
 var pinsElements = ads.map(createPinElement); // Формируем массив элементов меток
 renderElements(pinsElements, map.pinsContainer); // Отрисовываем тетки
+
+var cardsElements = ads.map(createCardElement);
+renderElements(cardsElements, map.pinsContainer);
