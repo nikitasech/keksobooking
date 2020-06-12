@@ -158,4 +158,4 @@ var pinsElements = ads.map(createPinElement); // Формируем массив
 renderElements(pinsElements, map.pinsContainer); // Отрисовываем тетки
 
 var cardsElements = ads.map(createCardElement);
-renderElements(cardsElements, map.pinsContainer);
+renderElements(cardsElements, map.pinsContainer); // TODO: Контейнер выбран временно!
