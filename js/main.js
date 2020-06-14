@@ -4,7 +4,8 @@ var NUMBER_ADS = 8;
 
 var map = {
   element: document.querySelector('.map'),
-  pinsContainer: document.querySelector('.map__pins'),
+  pinsContainerElement: document.querySelector('.map__pins'),
+  filtersContainerElement: document.querySelector('.map__filters-container'),
   Y_TOP_LIMIT: 130,
   Y_BOTTOM_LIMIT: 630,
 };
@@ -44,7 +45,7 @@ function getRandomArray(array) {
 
 function getAd(numberAd) {
   var numberAvatar = numberAd < 10 ? '0' + numberAd : numberAd;
-  var x = getRandomNumber(0, map.pinsContainer.clientWidth); // Случайная координата по горизонтали
+  var x = getRandomNumber(0, map.pinsContainerElement.clientWidth); // Случайная координата по горизонтали
   var y = getRandomNumber(map.Y_TOP_LIMIT, map.Y_BOTTOM_LIMIT); // Случайная координата по вертикали
 
   return {
@@ -83,14 +84,6 @@ function getAds(quantity) {
   }
 
   return ads; // Возвращаем массив
-}
-
-function getCards(quantity) {
-  var cards = [];
-
-  for (var card = 0; card < quantity; card++) {
-    cards.push
-  }
 }
 
 function createPinElement(object) {
@@ -141,21 +134,30 @@ function createCardElement(object) {
   return cardElement;
 }
 
-function renderElements(arrayElements, container) {
+function renderElements(elements, container, insertBefore) {
   var fragment = document.createDocumentFragment(); // Создаём фрагмент
 
-  for (var ad = 0; ad < arrayElements.length; ad++) {
-    fragment.appendChild(arrayElements[ad]); // Вставляем во фрагмент элементы из массива
+  if (Array.isArray(elements)) {
+    for (var ad = 0; ad < elements.length; ad++) {
+      fragment.appendChild(elements[ad]); // Вставляем во фрагмент элементы из массива
+    }
+  } else {
+    fragment.appendChild(elements); // Вставляем во фрагмент элемент
   }
 
-  container.appendChild(fragment); // Вставляем фрагмент в разметку
+  if (insertBefore) {
+    container.insertBefore(fragment, insertBefore);
+  } else {
+    container.appendChild(fragment); // Вставляем фрагмент в разметку
+  }
 }
 
 map.element.classList.remove('map--faded');
 
 var ads = getAds(NUMBER_ADS); // Создаём массив объявлений
 var pinsElements = ads.map(createPinElement); // Формируем массив элементов меток
-renderElements(pinsElements, map.pinsContainer); // Отрисовываем тетки
+renderElements(pinsElements, map.pinsContainerElement); // Отрисовываем тетки
 
-var cardsElements = ads.map(createCardElement);
-renderElements(cardsElements, map.pinsContainer); // TODO: Контейнер выбран временно!
+var cardsElements = ads.map(createCardElement); // Создаем массив из карточек
+
+renderElements(cardsElements[0], map.element, map.filtersContainerElement); // Отрисовываем карточку первого объявления перед фильтрами
