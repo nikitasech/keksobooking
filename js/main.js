@@ -1,6 +1,7 @@
 'use strict';
 
 var NUMBER_ADS = 8;
+var INDEX_NECESSARY_CARD = 0;
 
 var map = {
   element: document.querySelector('.map'),
@@ -13,7 +14,7 @@ var map = {
 var Data = {
   types: ['palace', 'flat', 'house', 'bungalo'],
   checks: ['12:00', '13:00', '14:00'],
-  features: ['wifi', 'dishwasher', 'parking', 'washer'],
+  features: ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
   photos: ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'],
   TypesTranslate: {
     'palace': 'Дворец',
@@ -115,7 +116,7 @@ function createCardElement(object) {
   var cardTypeElement = cardElement.querySelector('.popup__type');
   var cardCapacityElement = cardElement.querySelector('.popup__text--capacity');
   var cardTimeElement = cardElement.querySelector('.popup__text--time');
-  var cardFeatureselement = cardElement.querySelector('.popup__features');
+  var cardFeaturesElement = cardElement.querySelector('.popup__features');
   var cardDescriptionElement = cardElement.querySelector('.popup__description');
   var cardPhotosElement = cardElement.querySelector('.popup__photos');
   var cardAvatarElement = cardElement.querySelector('.popup__avatar');
@@ -126,10 +127,31 @@ function createCardElement(object) {
   cardTypeElement.textContent = Data.TypesTranslate[object.offer.type];
   cardCapacityElement.textContent = object.offer.rooms + ' комнаты для ' + object.offer.guests + ' гостей';
   cardTimeElement.textContent = 'заезд после ' + object.offer.checkin + ', выезд до' + object.offer.checkout;
-  cardFeatureselement.textContent = '**Удобства**';
   cardDescriptionElement.textContent = object.offer.description;
-  cardPhotosElement.textContent = '**Фотографии**';
   cardAvatarElement.src = object.author.avatar;
+
+  cardFeaturesElement.innerHTML = ''; // Очищаем контейнер преимуществ
+
+  for (var feature = 0; feature < object.offer.features.length; feature++) {
+    var featureElement = document.createElement('li'); // Создаём елемент списка
+
+    featureElement.classList.add('popup__feature'); // Добавляем класс
+    featureElement.classList.add('popup__feature--' + object.offer.features[feature]); // Добавляем модификатор
+
+    cardFeaturesElement.appendChild(featureElement); // Вставляем элемент списка
+  }
+
+  cardPhotosElement.innerHTML = ''; // Очищаем контейнер фотографий
+
+  for (var photo = 0; photo < object.offer.photos.length; photo++) {
+    var photoElement = new Image(45, 40); // Создаём изображение
+
+    photoElement.classList.add('popup__photo'); // Добавляем класс
+    photoElement.alt = 'Фотография жилья'; // Добавляем альтернативный текст
+    photoElement.src = object.offer.photos[photo]; // Добавляем ссылку
+
+    cardPhotosElement.appendChild(photoElement); // Вставляем изображение
+  }
 
   return cardElement;
 }
@@ -160,4 +182,4 @@ renderElements(pinsElements, map.pinsContainerElement); // Отрисовыва�
 
 var cardsElements = ads.map(createCardElement); // Создаем массив из карточек
 
-renderElements(cardsElements[0], map.element, map.filtersContainerElement); // Отрисовываем карточку первого объявления перед фильтрами
+renderElements(cardsElements[INDEX_NECESSARY_CARD], map.element, map.filtersContainerElement); // Отрисовываем карточку первого объявления перед фильтрами
