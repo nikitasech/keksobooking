@@ -104,6 +104,39 @@ function createPinElement(object) {
   return pinElement; // Возвращаем объявление
 }
 
+function createImagesElements(object, cardElement) {
+  var cardPhotosElement = cardElement.querySelector('.popup__photos');
+
+  cardPhotosElement.innerHTML = ''; // Очищаем контейнер фотографий
+
+  for (var photo = 0; photo < object.offer.photos.length; photo++) {
+    var photoElement = new Image(45, 40); // Создаём изображение
+
+    photoElement.classList.add('popup__photo'); // Добавляем класс
+    photoElement.alt = 'Фотография жилья'; // Добавляем альтернативный текст
+    photoElement.src = object.offer.photos[photo]; // Добавляем ссылку
+
+    cardPhotosElement.appendChild(photoElement); // Вставляем изображение
+  }
+
+  return cardPhotosElement;
+}
+
+function createFeaturesElements(object, cardElement) {
+  var cardFeaturesElement = cardElement.querySelector('.popup__features');
+
+  for (var feature = 0; feature < object.offer.features.length; feature++) {
+    var featureElement = document.createElement('li'); // Создаём елемент списка
+
+    featureElement.classList.add('popup__feature'); // Добавляем класс
+    featureElement.classList.add('popup__feature--' + object.offer.features[feature]); // Добавляем модификатор
+
+    cardFeaturesElement.appendChild(featureElement); // Вставляем элемент списка
+  }
+
+  return cardFeaturesElement;
+}
+
 function createCardElement(object) {
   var template = document.querySelector('#card')
   .content
@@ -118,7 +151,6 @@ function createCardElement(object) {
   var cardTimeElement = cardElement.querySelector('.popup__text--time');
   var cardFeaturesElement = cardElement.querySelector('.popup__features');
   var cardDescriptionElement = cardElement.querySelector('.popup__description');
-  var cardPhotosElement = cardElement.querySelector('.popup__photos');
   var cardAvatarElement = cardElement.querySelector('.popup__avatar');
 
   cardTitleElement.textContent = object.offer.title;
@@ -132,26 +164,8 @@ function createCardElement(object) {
 
   cardFeaturesElement.innerHTML = ''; // Очищаем контейнер преимуществ
 
-  for (var feature = 0; feature < object.offer.features.length; feature++) {
-    var featureElement = document.createElement('li'); // Создаём елемент списка
-
-    featureElement.classList.add('popup__feature'); // Добавляем класс
-    featureElement.classList.add('popup__feature--' + object.offer.features[feature]); // Добавляем модификатор
-
-    cardFeaturesElement.appendChild(featureElement); // Вставляем элемент списка
-  }
-
-  cardPhotosElement.innerHTML = ''; // Очищаем контейнер фотографий
-
-  for (var photo = 0; photo < object.offer.photos.length; photo++) {
-    var photoElement = new Image(45, 40); // Создаём изображение
-
-    photoElement.classList.add('popup__photo'); // Добавляем класс
-    photoElement.alt = 'Фотография жилья'; // Добавляем альтернативный текст
-    photoElement.src = object.offer.photos[photo]; // Добавляем ссылку
-
-    cardPhotosElement.appendChild(photoElement); // Вставляем изображение
-  }
+  createImagesElements(object, cardElement); // Заполняем контейнер фотографиями
+  createFeaturesElements(object, cardElement); // Заполняем контейнер преимуществами
 
   return cardElement;
 }
