@@ -1,8 +1,8 @@
 'use strict';
-
+/*
 var NUMBER_ADS = 8;
 var INDEX_NECESSARY_CARD = 0;
-
+*/
 var map = {
   element: document.querySelector('.map'),
   pinsContainerElement: document.querySelector('.map__pins'),
@@ -10,7 +10,7 @@ var map = {
   Y_TOP_LIMIT: 130,
   Y_BOTTOM_LIMIT: 630,
 };
-
+/*
 var Data = {
   types: ['palace', 'flat', 'house', 'bungalo'],
   checks: ['12:00', '13:00', '14:00'],
@@ -188,8 +188,6 @@ function renderElements(elements, container, insertBefore) {
   }
 }
 
-map.element.classList.remove('map--faded');
-
 var ads = getAds(NUMBER_ADS); // Создаём массив объявлений
 var pinsElements = ads.map(createPinElement); // Формируем массив элементов меток
 renderElements(pinsElements, map.pinsContainerElement); // Отрисовываем тетки
@@ -197,3 +195,104 @@ renderElements(pinsElements, map.pinsContainerElement); // Отрисовыва�
 var cardsElements = ads.map(createCardElement); // Создаем массив из карточек
 
 renderElements(cardsElements[INDEX_NECESSARY_CARD], map.element, map.filtersContainerElement); // Отрисовываем карточку первого объявления перед фильтрами
+ */
+
+var mainPinElement = document.querySelector('.map__pin--main');
+var adsFilterElements = document.querySelectorAll('.map__filters > *');
+
+var adFormElement = document.querySelector('.ad-form');
+var adFieldsetElements = adFormElement.querySelectorAll('fieldset');
+
+var addressFieldElement = adFormElement.querySelector('#address');
+var roomNumberElement = adFormElement.querySelector('#room_number');
+var capacityElement = adFormElement.querySelector('#capacity');
+
+var PIN_WIDTH = mainPinElement.offsetWidth; // Берём ширину метки и записываем в переменную
+var PIN_HEIGHT = PIN_WIDTH + 10; // Высота метки + высота иголки
+
+function onMainPinClick(evt) {
+  if (!evt.button) { // Если номер нажатой кнопки мыши равен нулю
+    enabledPage(); // Вызываем разблокировку страницы
+  }
+}
+
+function onMainPinPressEnter(evt) {
+  if (evt.code === 'Enter') { // Если нажата клавиша Enter
+    enabledPage(); // Вызываем разблокировку страницы
+  }
+}
+
+function getPositionPin(element) {
+  var positionX = element.offsetLeft + PIN_WIDTH / 2; // Отступ слева + половина ширины метки
+  var positionY = element.offsetTop + PIN_HEIGHT; // Отступ всерху + высота метки
+
+  if (map.element.classList.contains('map--faded')) { // Если карта заблокирована
+    positionY = element.offsetTop + PIN_WIDTH / 2; // Отступ сверху + половина высоты без иголки
+  }
+
+  return positionX + ', ' + positionY;
+}
+
+function disablePage() {
+  for (var fieldset = 0; fieldset < adFieldsetElements.length; fieldset++) {
+    adFieldsetElements[fieldset].setAttribute('disabled', 'true'); // Блокируем все поля для заполнения
+  }
+
+  for (var filter = 0; filter < adsFilterElements.length; filter++) {
+    adsFilterElements[filter].setAttribute('disabled', 'true'); // Блокируем все фильтры
+  }
+
+  addressFieldElement.value = getPositionPin(mainPinElement); // Указываем текущее расположение метки в поле адреса
+
+  validationСapacities(); // Вызываем функцию валидации вместимости
+
+  mainPinElement.addEventListener('mousedown', onMainPinClick); // Вешаем обработчик клика на метку
+  mainPinElement.addEventListener('keydown', onMainPinPressEnter); // Вешаем обработчик Enter на метку
+}
+
+function enabledPage() {
+  map.element.classList.remove('map--faded'); // Разблокируем карту
+  adFormElement.classList.remove('ad-form--disabled'); // Разблокируем форму
+
+  for (var fieldset = 0; fieldset < adFieldsetElements.length; fieldset++) {
+    adFieldsetElements[fieldset].removeAttribute('disabled', 'true'); // Разблокируем все поля ввода
+  }
+
+  for (var filter = 0; filter < adsFilterElements.length; filter++) {
+    adsFilterElements[filter].removeAttribute('disabled', 'true'); // Разблокируем все фильтры
+  }
+
+  addressFieldElement.value = getPositionPin(mainPinElement); // Укажем в поле адреса, координаты метки
+
+  mainPinElement.removeEventListener('mousedown', onMainPinClick); // Удаляем обработчик клика на метку
+  mainPinElement.removeEventListener('keydown', onMainPinPressEnter); // Удаляем обработчик Enter на метку
+
+  roomNumberElement.addEventListener('change', function () {
+    validationСapacities(); // Вызываем функцию валидации вместимости
+  });
+
+  capacityElement.addEventListener('change', function () {
+    validationСapacities(); // Вызываем функцию валидации вместимости
+  });
+}
+
+function validationСapacities() {
+  if (capacityElement.value > roomNumberElement.value && capacityElement.value !== '0' && roomNumberElement.value !== '100') {
+    capacityElement.valid = false; // Указываем что вместимость не валидна
+    capacityElement.setCustomValidity('В такое маленькое жильё не поместится столько гостей');
+
+  } else if (capacityElement.value === '0' & roomNumberElement.value !== '100') {
+    capacityElement.valid = false; // Указываем что вместимость не валидна
+    capacityElement.setCustomValidity('Если тебе нужно особняк для вечеринки - выбери 100 комнат!');
+
+  } else if (capacityElement.value !== '0' & roomNumberElement.value === '100') {
+    capacityElement.valid = false; // Указываем что вместимость не валидна
+    capacityElement.setCustomValidity('Зачем тебе такой большой особняк для ' + capacityElement.value + 'человек!? Обычно его берут для вечеринок');
+
+  } else {
+    capacityElement.valid = true; // Указываем что вместимость валидна
+    capacityElement.setCustomValidity('');
+  }
+}
+
+disablePage();
