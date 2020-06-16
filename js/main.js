@@ -1,10 +1,12 @@
 'use strict';
 
 var NUMBER_ADS = 8;
+var INDEX_NECESSARY_CARD = 0;
 
 var map = {
   element: document.querySelector('.map'),
-  pinsContainer: document.querySelector('.map__pins'),
+  pinsContainerElement: document.querySelector('.map__pins'),
+  filtersContainerElement: document.querySelector('.map__filters-container'),
   Y_TOP_LIMIT: 130,
   Y_BOTTOM_LIMIT: 630,
 };
@@ -12,8 +14,14 @@ var map = {
 var Data = {
   types: ['palace', 'flat', 'house', 'bungalo'],
   checks: ['12:00', '13:00', '14:00'],
-  features: ['wifi', 'dishwasher', 'parking', 'washer'],
+  features: ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
   photos: ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'],
+  TypesTranslate: {
+    'palace': 'Дворец',
+    'flat': 'Квартира',
+    'house': 'Дом',
+    'bungalo': 'Бунгало',
+  },
 };
 
 function getRandomNumber(min, max) {
@@ -38,7 +46,7 @@ function getRandomArray(array) {
 
 function getAd(numberAd) {
   var numberAvatar = numberAd < 10 ? '0' + numberAd : numberAd;
-  var x = getRandomNumber(0, map.pinsContainer.clientWidth); // Случайная координата по горизонтали
+  var x = getRandomNumber(0, map.pinsContainerElement.clientWidth); // Случайная координата по горизонтали
   var y = getRandomNumber(map.Y_TOP_LIMIT, map.Y_BOTTOM_LIMIT); // Случайная координата по вертикали
 
   return {
@@ -96,18 +104,96 @@ function createPinElement(object) {
   return pinElement; // Возвращаем объявление
 }
 
-function renderElements(arrayElements, container) {
-  var fragment = document.createDocumentFragment(); // Создаём фрагмент
+function createImagesElements(object, cardElement) {
+  var cardPhotosElement = cardElement.querySelector('.popup__photos');
 
-  for (var ad = 0; ad < arrayElements.length; ad++) {
-    fragment.appendChild(arrayElements[ad]); // Вставляем во фрагмент элементы из массива
+  cardPhotosElement.innerHTML = ''; // Очищаем контейнер фотографий
+
+  for (var photo = 0; photo < object.offer.photos.length; photo++) {
+    var photoElement = new Image(45, 40); // Создаём изображение
+
+    photoElement.classList.add('popup__photo'); // Добавляем класс
+    photoElement.alt = 'Фотография жилья'; // Добавляем альтернативный текст
+    photoElement.src = object.offer.photos[photo]; // Добавляем ссылку
+
+    cardPhotosElement.appendChild(photoElement); // Вставляем изображение
   }
 
-  container.appendChild(fragment); // Вставляем фрагмент в разметку
+  return cardPhotosElement;
+}
+
+function createFeaturesElements(object, cardElement) {
+  var cardFeaturesElement = cardElement.querySelector('.popup__features');
+
+  for (var feature = 0; feature < object.offer.features.length; feature++) {
+    var featureElement = document.createElement('li'); // Создаём елемент списка
+
+    featureElement.classList.add('popup__feature'); // Добавляем класс
+    featureElement.classList.add('popup__feature--' + object.offer.features[feature]); // Добавляем модификатор
+
+    cardFeaturesElement.appendChild(featureElement); // Вставляем элемент списка
+  }
+
+  return cardFeaturesElement;
+}
+
+function createCardElement(object) {
+  var template = document.querySelector('#card')
+  .content
+  .querySelector('.map__card');
+
+  var cardElement = template.cloneNode(true);
+  var cardTitleElement = cardElement.querySelector('.popup__title');
+  var cardAddressElement = cardElement.querySelector('.popup__text--address');
+  var cardPriceElement = cardElement.querySelector('.popup__text--price');
+  var cardTypeElement = cardElement.querySelector('.popup__type');
+  var cardCapacityElement = cardElement.querySelector('.popup__text--capacity');
+  var cardTimeElement = cardElement.querySelector('.popup__text--time');
+  var cardFeaturesElement = cardElement.querySelector('.popup__features');
+  var cardDescriptionElement = cardElement.querySelector('.popup__description');
+  var cardAvatarElement = cardElement.querySelector('.popup__avatar');
+
+  cardTitleElement.textContent = object.offer.title;
+  cardAddressElement.textContent = object.offer.address;
+  cardPriceElement.textContent = object.offer.price + '₽/ночь';
+  cardTypeElement.textContent = Data.TypesTranslate[object.offer.type];
+  cardCapacityElement.textContent = object.offer.rooms + ' комнаты для ' + object.offer.guests + ' гостей';
+  cardTimeElement.textContent = 'заезд после ' + object.offer.checkin + ', выезд до' + object.offer.checkout;
+  cardDescriptionElement.textContent = object.offer.description;
+  cardAvatarElement.src = object.author.avatar;
+
+  cardFeaturesElement.innerHTML = ''; // Очищаем контейнер преимуществ
+
+  createImagesElements(object, cardElement); // Заполняем контейнер фотографиями
+  createFeaturesElements(object, cardElement); // Заполняем контейнер преимуществами
+
+  return cardElement;
+}
+
+function renderElements(elements, container, insertBefore) {
+  var fragment = document.createDocumentFragment(); // Создаём фрагмент
+
+  if (Array.isArray(elements)) {
+    for (var ad = 0; ad < elements.length; ad++) {
+      fragment.appendChild(elements[ad]); // Вставляем во фрагмент элементы из массива
+    }
+  } else {
+    fragment.appendChild(elements); // Вставляем во фрагмент элемент
+  }
+
+  if (insertBefore) {
+    container.insertBefore(fragment, insertBefore);
+  } else {
+    container.appendChild(fragment); // Вставляем фрагмент в разметку
+  }
 }
 
 map.element.classList.remove('map--faded');
 
 var ads = getAds(NUMBER_ADS); // Создаём массив объявлений
 var pinsElements = ads.map(createPinElement); // Формируем массив элементов меток
-renderElements(pinsElements, map.pinsContainer); // Отрисовываем тетки
+renderElements(pinsElements, map.pinsContainerElement); // Отрисовываем тетки
+
+var cardsElements = ads.map(createCardElement); // Создаем массив из карточек
+
+renderElements(cardsElements[INDEX_NECESSARY_CARD], map.element, map.filtersContainerElement); // Отрисовываем карточку первого объявления перед фильтрами
