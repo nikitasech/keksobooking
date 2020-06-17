@@ -224,7 +224,7 @@ function getPositionPin(element) {
     positionY = element.offsetTop + PIN_WIDTH / 2; // Отступ сверху + половина высоты без иголки
   }
 
-  return positionX + ', ' + positionY;
+  return Math.floor(positionX) + ', ' + Math.floor(positionY);
 }
 
 function toggleInputs(elementsArray) {
