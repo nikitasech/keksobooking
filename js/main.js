@@ -13,6 +13,10 @@ var Data = {
   },
 };
 
+var KeyCodes = {
+  enter: 'Enter',
+};
+
 var mapElement = document.querySelector('.map');
 var mainPinElement = mapElement.querySelector('.map__pin--main');
 var pinsContainerElement = mapElement.querySelector('.map__pins');
@@ -38,13 +42,13 @@ var NUMBER_ADS = 8;
 
 function onMainPinClick(evt) {
   if (!evt.button) { // Если номер нажатой кнопки мыши равен нулю
-    enabledPage(); // Вызываем разблокировку страницы
+    togglePage(); // Вызываем разблокировку страницы
   }
 }
 
 function onMainPinPressEnter(evt) {
-  if (evt.code === 'Enter') { // Если нажата клавиша Enter
-    enabledPage(); // Вызываем разблокировку страницы
+  if (evt.code === KeyCodes.enter) { // Если нажата клавиша Enter
+    togglePage(); // Вызываем разблокировку страницы
   }
 }
 
@@ -223,49 +227,52 @@ function getPositionPin(element) {
   return positionX + ', ' + positionY;
 }
 
-function disablePage() {
-  for (var fieldset = 0; fieldset < adFieldsetElements.length; fieldset++) {
-    adFieldsetElements[fieldset].setAttribute('disabled', 'true'); // Блокируем все поля для заполнения
+function toggleInputs(elementsArray) {
+  for (var i = 0; i < elementsArray.length; i++) {
+    if (elementsArray[i].getAttribute('disabled')) {
+      elementsArray[i].removeAttribute('disabled'); // Разблокируем елемент
+    } else {
+      elementsArray[i].setAttribute('disabled', 'true'); // Заблокируем элемент
+    }
   }
-
-  for (var filter = 0; filter < adsFilterElements.length; filter++) {
-    adsFilterElements[filter].setAttribute('disabled', 'true'); // Блокируем все фильтры
-  }
-
-  addressFieldElement.value = getPositionPin(mainPinElement); // Указываем текущее расположение метки в поле адреса
-
-  validationСapacities(); // Вызываем функцию валидации вместимости
-
-  mainPinElement.addEventListener('mousedown', onMainPinClick); // Вешаем обработчик клика на метку
-  mainPinElement.addEventListener('keydown', onMainPinPressEnter); // Вешаем обработчик Enter на метку
 }
 
-function enabledPage() {
-  mapElement.classList.remove('map--faded'); // Разблокируем карту
-  adFormElement.classList.remove('ad-form--disabled'); // Разблокируем форму
-
-  renderElements(pinsElements, pinsContainerElement); // Отрисовываем тетки
-
-  for (var fieldset = 0; fieldset < adFieldsetElements.length; fieldset++) {
-    adFieldsetElements[fieldset].removeAttribute('disabled', 'true'); // Разблокируем все поля ввода
+function togglePage(loadPage) {
+  if (!loadPage) {
+    mapElement.classList.toggle('map--faded'); // Разблокируем карту
+    adFormElement.classList.toggle('ad-form--disabled'); // Разблокируем форму
   }
 
-  for (var filter = 0; filter < adsFilterElements.length; filter++) {
-    adsFilterElements[filter].removeAttribute('disabled', 'true'); // Разблокируем все фильтры
+  toggleInputs(adFieldsetElements); // Заблокируем/разблокируем поля добавления объявления
+  toggleInputs(adsFilterElements); // Заблокируем/разблокируем поля фильтров
+
+  validationСapacities(); // Вызываем функцию валидации вместимости
+  addressFieldElement.value = getPositionPin(mainPinElement); // Указываем текущее расположение метки в поле адреса
+
+  if (mapElement.classList.contains('map--faded')) {
+    mainPinElement.addEventListener('mousedown', onMainPinClick); // Вешаем обработчик клика на метку
+    mainPinElement.addEventListener('keydown', onMainPinPressEnter); // Вешаем обработчик Enter на метку
+
+  } else {
+    mapElement.classList.remove('map--faded'); // Разблокируем карту
+    adFormElement.classList.remove('ad-form--disabled'); // Разблокируем форму
+
+    mainPinElement.removeEventListener('mousedown', onMainPinClick); // Удаляем обработчик клика на метку
+    mainPinElement.removeEventListener('keydown', onMainPinPressEnter); // Удаляем обработчик Enter на метку
+
+    mainPinElement.removeEventListener('mousedown', onMainPinClick); // Удаляем обработчик клика на метку
+    mainPinElement.removeEventListener('keydown', onMainPinPressEnter); // Удаляем обработчик Enter на метку
+
+    roomNumberElement.addEventListener('change', function () {
+      validationСapacities(); // Вызываем функцию валидации вместимости
+    });
+
+    capacityElement.addEventListener('change', function () {
+      validationСapacities(); // Вызываем функцию валидации вместимости
+    });
+
+    renderElements(pinsElements, pinsContainerElement); // Отрисовываем тетки
   }
-
-  addressFieldElement.value = getPositionPin(mainPinElement); // Укажем в поле адреса, координаты метки
-
-  mainPinElement.removeEventListener('mousedown', onMainPinClick); // Удаляем обработчик клика на метку
-  mainPinElement.removeEventListener('keydown', onMainPinPressEnter); // Удаляем обработчик Enter на метку
-
-  roomNumberElement.addEventListener('change', function () {
-    validationСapacities(); // Вызываем функцию валидации вместимости
-  });
-
-  capacityElement.addEventListener('change', function () {
-    validationСapacities(); // Вызываем функцию валидации вместимости
-  });
 }
 
 function validationСapacities() {
@@ -287,10 +294,13 @@ function validationСapacities() {
   }
 }
 
-disablePage(); // Блокируем нашу страницу
+// mapElement.classList.remove('map--faded'); // Разблокируем карту
+// adFormElement.classList.remove('ad-form--disabled'); // Разблокируем форму
 
 var ads = getAds(NUMBER_ADS); // Создаём массив объявлений
 var pinsElements = ads.map(createPinElement); // Формируем массив элементов меток
+
+togglePage(true); // Блокируем нашу страницу
 
 // var cardsElements = ads.map(createCardElement); // Создаем массив из карточек
 // renderElements(cardsElements[INDEX_NECESSARY_CARD], map.element, map.filtersContainerElement); // Отрисовываем карточку первого объявления перед фильтрами
