@@ -294,9 +294,6 @@ function validationСapacities() {
   }
 }
 
-// mapElement.classList.remove('map--faded'); // Разблокируем карту
-// adFormElement.classList.remove('ad-form--disabled'); // Разблокируем форму
-
 var ads = getAds(NUMBER_ADS); // Создаём массив объявлений
 var pinsElements = ads.map(createPinElement); // Формируем массив элементов меток
 
