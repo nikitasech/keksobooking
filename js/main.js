@@ -229,10 +229,10 @@ function getPositionPin(element) {
 
 function toggleInputs(elementsArray) {
   for (var i = 0; i < elementsArray.length; i++) {
-    if (elementsArray[i].getAttribute('disabled')) {
-      elementsArray[i].removeAttribute('disabled'); // Разблокируем елемент
+    if (elementsArray[i].disabled) {
+      elementsArray[i].disabled = !elementsArray[i].disabled; // Разблокируем елемент
     } else {
-      elementsArray[i].setAttribute('disabled', 'true'); // Заблокируем элемент
+      elementsArray[i].disabled = true; // Заблокируем элемент
     }
   }
 }
