@@ -229,11 +229,7 @@ function getPositionPin(element) {
 
 function toggleInputs(elementsArray) {
   for (var i = 0; i < elementsArray.length; i++) {
-    if (elementsArray[i].disabled) {
-      elementsArray[i].disabled = !elementsArray[i].disabled; // Разблокируем елемент
-    } else {
-      elementsArray[i].disabled = true; // Заблокируем элемент
-    }
+    elementsArray[i].disabled = !elementsArray[i].disabled; // Разблокируем елемент
   }
 }
 
