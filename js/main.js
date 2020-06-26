@@ -18,6 +18,13 @@ var KeyCodes = {
   esc: 'Escape',
 };
 
+var MinPrice = {
+  BUNGALO: 0,
+  FLAT: 1000,
+  HOUSE: 5000,
+  PALACE: 10000,
+};
+
 var mapElement = document.querySelector('.map');
 var mainPinElement = mapElement.querySelector('.map__pin--main');
 var pinsContainerElement = mapElement.querySelector('.map__pins');
@@ -157,14 +164,23 @@ function createImagesElements(object, cardElement) {
 function createFeaturesElements(object, cardElement) {
   var cardFeaturesElement = cardElement.querySelector('.popup__features');
 
-  for (var feature = 0; feature < object.offer.features.length; feature++) {
+  // for (var feature = 0; feature < object.offer.features.length; feature++) {
+  //   var featureElement = document.createElement('li'); // Создаём елемент списка
+
+  //   featureElement.classList.add('popup__feature'); // Добавляем класс
+  //   featureElement.classList.add('popup__feature--' + object.offer.features[feature]); // Добавляем модификатор
+
+  //   cardFeaturesElement.appendChild(featureElement); // Вставляем элемент списка
+  // }
+
+  object.offer.features.forEach(function (item) {
     var featureElement = document.createElement('li'); // Создаём елемент списка
 
     featureElement.classList.add('popup__feature'); // Добавляем класс
-    featureElement.classList.add('popup__feature--' + object.offer.features[feature]); // Добавляем модификатор
+    featureElement.classList.add('popup__feature--' + item); // Добавляем модификатор
 
     cardFeaturesElement.appendChild(featureElement); // Вставляем элемент списка
-  }
+  });
 
   return cardFeaturesElement;
 }
@@ -206,9 +222,9 @@ function renderElements(elements, container, insertBefore) {
   var fragment = document.createDocumentFragment(); // Создаём фрагмент
 
   if (Array.isArray(elements)) {
-    for (var ad = 0; ad < elements.length; ad++) {
-      fragment.appendChild(elements[ad]); // Вставляем во фрагмент элементы из массива
-    }
+    elements.forEach(function (item) {
+      fragment.appendChild(item); // Вставляем во фрагмент элементы из массива
+    });
   } else {
     fragment.appendChild(elements); // Вставляем во фрагмент элемент
   }
@@ -232,9 +248,9 @@ function getPositionPin(element) {
 }
 
 function toggleInputs(elementsArray) {
-  for (var i = 0; i < elementsArray.length; i++) {
-    elementsArray[i].disabled = !elementsArray[i].disabled; // Разблокируем елемент
-  }
+  elementsArray.forEach(function (item) {
+    item.disabled = !item.disabled; // Разблокируем елемент
+  });
 }
 
 function togglePage(loadPage) {
@@ -246,7 +262,7 @@ function togglePage(loadPage) {
   toggleInputs(adFieldsetElements); // Заблокируем/разблокируем поля добавления объявления
   toggleInputs(adsFilterElements); // Заблокируем/разблокируем поля фильтров
 
-  validationСapacities(); // Вызываем функцию валидации вместимости
+  validateСapacities(); // Вызываем функцию валидации вместимости
   addressFieldElement.value = getPositionPin(mainPinElement); // Указываем текущее расположение метки в поле адреса
 
   if (mapElement.classList.contains('map--faded')) {
@@ -264,30 +280,30 @@ function togglePage(loadPage) {
     mainPinElement.removeEventListener('keydown', onMainPinPressEnter); // Удаляем обработчик Enter на метку
 
     roomNumberElement.addEventListener('change', function () {
-      validationСapacities(); // Вызываем функцию валидации вместимости
+      validateСapacities(); // Вызываем функцию валидации вместимости
     });
 
     capacityElement.addEventListener('change', function () {
-      validationСapacities(); // Вызываем функцию валидации вместимости
+      validateСapacities(); // Вызываем функцию валидации вместимости
     });
 
     typeHousingElement.addEventListener('change', function () {
-      validationPrice();
+      validatePrice();
     });
 
     checkinElement.addEventListener('change', function (evt) {
-      validationChecks(evt);
+      validateChecks(evt);
     });
 
     checkoutElement.addEventListener('change', function (evt) {
-      validationChecks(evt);
+      validateChecks(evt);
     });
 
     renderElements(pinsElements, pinsContainerElement); // Отрисовываем тетки
   }
 }
 
-function validationСapacities() {
+function validateСapacities() {
   if (capacityElement.value > roomNumberElement.value && capacityElement.value !== '0' && roomNumberElement.value !== '100') {
     capacityElement.valid = false; // Указываем что вместимость не валидна
     capacityElement.setCustomValidity('В такое маленькое жильё не поместится столько гостей');
@@ -308,7 +324,7 @@ function validationСapacities() {
 
 function onCardPressEsc(evt) {
   if (evt.code === KeyCodes.esc) {
-    closeCard();
+    closeCard(); // Закрываем карточку
   }
 }
 
@@ -323,78 +339,60 @@ function closeCard() {
 }
 
 function openCard(card) {
-  closeCard();
+  closeCard(); // Закрываем предыдущюю карточку
 
   renderElements(card, mapElement, filtersContainerElement); // Отрисовываем карточку нужного объявления перед фильтрами
-  document.addEventListener('keydown', onCardPressEsc);
+  document.addEventListener('keydown', onCardPressEsc); // Обработчик на esc
 
-  var cardCloseButton = document.querySelector('.popup__close');
-  cardCloseButton.addEventListener('click', function () {
-    closeCard();
+  var cardCloseButton = document.querySelector('.popup__close'); // Найдём кнопку закрытия
+  cardCloseButton.addEventListener('click', function () { // Обработчик на кнопку закрытия
+    closeCard(); // Закрываем карточку
   });
 }
 
 function hangHandlerPin(pin, card) {
-  pin.addEventListener('click', function () {
-    openCard(card);
+  pin.addEventListener('click', function () { // Обработчик открытия карточки
+    openCard(card); // Открытие карточки
   });
 
-  pin.addEventListener('keydown', function (evt) {
+  pin.addEventListener('keydown', function (evt) { // Обработчик открытия на enter
     if (evt.keyCode === KeyCodes.enter) {
-      openCard(card);
+      openCard(card); // Открытие карточки
     }
   });
 }
 
 function hangHandlerPins() {
-  for (var i = 0; i < ads.length; i++) {
-    hangHandlerPin(pinsElements[i], cardsElements[i]);
-  }
+  pinsElements.forEach(function (item, index) {
+    hangHandlerPin(item, cardsElements[index]); // Вешаем на каждый маркер обработчики событий
+  });
 }
 
-function validationPrice() {
+function validatePrice() {
   if (typeHousingElement.value === 'bungalo') {
-    priceElement.placeholder = 0;
-    priceElement.min = 0;
+    priceElement.placeholder = MinPrice.BUNGALO;
+    priceElement.min = MinPrice.BUNGALO;
 
   } else if (typeHousingElement.value === 'flat') {
-    priceElement.placeholder = 1000;
-    priceElement.min = 1000;
+    priceElement.placeholder = MinPrice.FLAT;
+    priceElement.min = MinPrice.FLAT;
 
   } else if (typeHousingElement.value === 'house') {
-    priceElement.placeholder = 5000;
-    priceElement.min = 5000;
+    priceElement.placeholder = MinPrice.HOUSE;
+    priceElement.min = MinPrice.HOUSE;
 
   } else {
-    priceElement.placeholder = 10000;
-    priceElement.min = 10000;
+    priceElement.placeholder = MinPrice.PALACE;
+    priceElement.min = MinPrice.PALACE;
   }
 }
 
-function validationChecks(evt) {
+function validateChecks(evt) {
   if (evt.target === checkinElement) {
-    if (checkinElement.value === '12:00') {
-      checkoutElement.value = '12:00';
-
-    } else if (checkinElement.value === '13:00') {
-      checkoutElement.value = '13:00';
-
-    } else {
-      checkoutElement.value = '14:00';
-
-    }
+    checkoutElement.value = checkinElement.value;
 
   } else {
-    if (checkoutElement.value === '12:00') {
-      checkinElement.value = '12:00';
-
-    } else if (checkoutElement.value === '13:00') {
-      checkinElement.value = '13:00';
-
-    } else {
-      checkinElement.value = '14:00';
-
-    }
+    checkinElement.value = checkoutElement.value;
   }
 }
 
