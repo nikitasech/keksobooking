@@ -1,6 +1,15 @@
 'use strict';
 
 (function () {
+  var capacityElement = window.service.elements.capacityElement;
+  var roomNumberElement = window.service.elements.roomNumberElement;
+
+  var typeHousingElement = window.service.elements.typeHousingElement;
+  var priceElement = window.service.elements.priceElement;
+
+  var checkoutElement = window.service.elements.checkoutElement;
+  var checkinElement = window.service.elements.checkinElement;
+
   var MinPrice = {
     BUNGALO: 0,
     FLAT: 1000,
@@ -10,49 +19,49 @@
 
   window.form = {
     validateСapacities: function () {
-      if (window.service.elements.capacityElement.value > window.service.elements.roomNumberElement.value && window.service.elements.capacityElement.value !== '0' && window.service.elements.roomNumberElement.value !== '100') {
-        window.service.elements.capacityElement.valid = false; // Указываем что вместимость не валидна
-        window.service.elements.capacityElement.setCustomValidity('В такое маленькое жильё не поместится столько гостей');
+      if (capacityElement.value > roomNumberElement.value && capacityElement.value !== '0' && roomNumberElement.value !== '100') {
+        capacityElement.valid = false; // Указываем что вместимость не валидна
+        capacityElement.setCustomValidity('В такое маленькое жильё не поместится столько гостей');
 
-      } else if (window.service.elements.capacityElement.value === '0' & window.service.elements.roomNumberElement.value !== '100') {
-        window.service.elements.capacityElement.valid = false; // Указываем что вместимость не валидна
-        window.service.elements.capacityElement.setCustomValidity('Если тебе нужно особняк для вечеринки - выбери 100 комнат!');
+      } else if (capacityElement.value === '0' & roomNumberElement.value !== '100') {
+        capacityElement.valid = false; // Указываем что вместимость не валидна
+        capacityElement.setCustomValidity('Если тебе нужно особняк для вечеринки - выбери 100 комнат!');
 
-      } else if (window.service.elements.capacityElement.value !== '0' & window.service.elements.roomNumberElement.value === '100') {
-        window.service.elements.capacityElement.valid = false; // Указываем что вместимость не валидна
-        window.service.elements.capacityElement.setCustomValidity('Зачем тебе такой большой особняк для ' + window.service.elements.capacityElement.value + 'человек!? Обычно его берут для вечеринок');
+      } else if (capacityElement.value !== '0' & window.service.elements.roomNumberElement.value === '100') {
+        capacityElement.valid = false; // Указываем что вместимость не валидна
+        capacityElement.setCustomValidity('Зачем тебе такой большой особняк для ' + capacityElement.value + 'человек!? Обычно его берут для вечеринок');
 
       } else {
-        window.service.elements.capacityElement.valid = true; // Указываем что вместимость валидна
-        window.service.elements.capacityElement.setCustomValidity('');
+        capacityElement.valid = true; // Указываем что вместимость валидна
+        capacityElement.setCustomValidity('');
       }
     },
 
     validatePrice: function () {
-      if (window.service.elements.typeHousingElement.value === 'bungalo') {
-        window.service.elements.priceElement.placeholder = MinPrice.BUNGALO;
-        window.service.elements.priceElement.min = MinPrice.BUNGALO;
+      if (typeHousingElement.value === 'bungalo') {
+        priceElement.placeholder = MinPrice.BUNGALO;
+        priceElement.min = MinPrice.BUNGALO;
 
-      } else if (window.service.elements.typeHousingElement.value === 'flat') {
-        window.service.elements.priceElement.placeholder = MinPrice.FLAT;
-        window.service.elements.priceElement.min = MinPrice.FLAT;
+      } else if (typeHousingElement.value === 'flat') {
+        priceElement.placeholder = MinPrice.FLAT;
+        priceElement.min = MinPrice.FLAT;
 
-      } else if (window.service.elements.typeHousingElement.value === 'house') {
-        window.service.elements.priceElement.placeholder = MinPrice.HOUSE;
-        window.service.elements.priceElement.min = MinPrice.HOUSE;
+      } else if (typeHousingElement.value === 'house') {
+        priceElement.placeholder = MinPrice.HOUSE;
+        priceElement.min = MinPrice.HOUSE;
 
       } else {
-        window.service.elements.priceElement.placeholder = MinPrice.PALACE;
-        window.service.elements.priceElement.min = MinPrice.PALACE;
+        priceElement.placeholder = MinPrice.PALACE;
+        priceElement.min = MinPrice.PALACE;
       }
     },
 
     validateChecks: function (evt) {
-      if (evt.target === window.service.elements.checkinElement) {
-        window.service.elements.checkoutElement.value = window.service.elements.checkinElement.value;
+      if (evt.target === checkinElement) {
+        checkoutElement.value = checkinElement.value;
 
       } else {
-        window.service.elements.checkinElement.value = window.service.elements.checkoutElement.value;
+        checkinElement.value = checkoutElement.value;
       }
     },
 
