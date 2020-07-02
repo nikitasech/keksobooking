@@ -6,15 +6,15 @@
 
     cardPhotosElement.innerHTML = ''; // Очищаем контейнер фотографий
 
-    for (var photo = 0; photo < object.offer.photos.length; photo++) {
+    object.offer.photos.forEach(function (urlPhoto) {
       var photoElement = new Image(45, 40); // Создаём изображение
 
       photoElement.classList.add('popup__photo'); // Добавляем класс
       photoElement.alt = 'Фотография жилья'; // Добавляем альтернативный текст
-      photoElement.src = object.offer.photos[photo]; // Добавляем ссылку
+      photoElement.src = urlPhoto; // Добавляем ссылку
 
       cardPhotosElement.appendChild(photoElement); // Вставляем изображение
-    }
+    });
 
     return cardPhotosElement;
   }
