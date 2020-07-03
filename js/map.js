@@ -8,6 +8,28 @@
   var filtersContainerElement = window.service.elements.filtersContainerElement;
 
   window.map = {
+    closeCard: function () {
+      var cardElement = mapElement.querySelector('.map__card'); // Находим карточку
+
+      if (cardElement) {
+        cardElement.remove(); // Удаляем из разметки все старые объявления если они есть
+      }
+
+      document.removeEventListener('keydown', window.map.onCardPressEsc);
+    },
+
+    openCard: function (card) {
+      window.map.closeCard(); // Закрываем предыдущюю карточку
+
+      window.Util.renderElements(card, mapElement, filtersContainerElement); // Отрисовываем карточку нужного объявления перед фильтрами
+      document.addEventListener('keydown', window.map.onCardPressEsc); // Обработчик на esc
+
+      var cardCloseButton = document.querySelector('.popup__close'); // Найдём кнопку закрытия
+      cardCloseButton.addEventListener('click', function () { // Обработчик на кнопку закрытия
+        window.map.closeCard(); // Закрываем карточку
+      });
+    },
+
     onMainPinClick: function (evt) {
       if (!evt.button) { // Если номер нажатой кнопки мыши равен нулю
         window.page.togglePage(); // Вызываем разблокировку страницы
@@ -22,7 +44,7 @@
 
     onCardPressEsc: function (evt) {
       if (evt.code === KeyCodes.esc) {
-        this.closeCard(); // Закрываем карточку
+        window.map.closeCard(); // Закрываем карточку
       }
     },
 
@@ -41,28 +63,6 @@
     hangHandlerPins: function () {
       window.pinsElements.forEach(function (item, index) {
         window.map.hangHandlerPin(item, window.cardsElements[index]); // Вешаем на каждый маркер обработчики событий
-      });
-    },
-
-    closeCard: function () {
-      var cardElement = mapElement.querySelector('.map__card'); // Находим карточку
-
-      if (cardElement) {
-        cardElement.remove(); // Удаляем из разметки все старые объявления если они есть
-      }
-
-      document.removeEventListener('keydown', this.onCardPressEsc);
-    },
-
-    openCard: function (card) {
-      this.closeCard(); // Закрываем предыдущюю карточку
-
-      window.Util.renderElements(card, mapElement, filtersContainerElement); // Отрисовываем карточку нужного объявления перед фильтрами
-      document.addEventListener('keydown', this.onCardPressEsc); // Обработчик на esc
-
-      var cardCloseButton = document.querySelector('.popup__close'); // Найдём кнопку закрытия
-      cardCloseButton.addEventListener('click', function () { // Обработчик на кнопку закрытия
-        window.map.closeCard(); // Закрываем карточку
       });
     },
 
