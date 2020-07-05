@@ -47,6 +47,13 @@
       HEIGHT: PIN_HEIGHT, // Высота метки + высота иголки
     },
 
+    MapLimits: {
+      TOP: 130,
+      BOTTOM: 630,
+      LEFT: 0,
+      RIGHT: mapElement.offsetWidth,
+    },
+
     KeyCodes: {
       enter: 'Enter',
       esc: 'Escape',
