@@ -7,14 +7,15 @@
 
   var Pin = window.service.Pin;
   var MapLimits = window.service.MapLimits;
+  var KeyCodes = window.service.KeyCodes;
 
   function getPositionXPin(element) {
     return element.offsetLeft + Pin.WIDTH / 2; // Отступ слева + половина ширины метки
-  };
+  }
 
   function getPositionYPin(element) {
     return element.offsetTop + Pin.HEIGHT; // Отступ всерху + высота метки
-  };
+  }
 
   function movePin(evt) {
     evt.preventDefault();
@@ -62,8 +63,8 @@
 
       addressFieldElement.value = window.mainPin.getPositionPin(mainPinElement); // Указываем текущее расположение метки в поле адреса
 
-      mainPinElement.style.left = `${coordinatesPin.x}px`;
-      mainPinElement.style.top = `${coordinatesPin.y}px`;
+      mainPinElement.style.left = coordinatesPin.x + 'px';
+      mainPinElement.style.top = coordinatesPin.y + 'px';
     }
 
     function onPinUp() {

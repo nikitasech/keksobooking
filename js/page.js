@@ -8,7 +8,6 @@
   var adsFilterElements = window.service.elements.adsFilterElements;
 
   var mainPinElement = window.service.elements.mainPinElement;
-  var addressFieldElement = window.service.elements.addressFieldElement;
   var roomNumberElement = window.service.elements.roomNumberElement;
   var capacityElement = window.service.elements.capacityElement;
   var typeHousingElement = window.service.elements.typeHousingElement;
