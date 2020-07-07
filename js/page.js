@@ -8,7 +8,6 @@
   var adsFilterElements = window.service.elements.adsFilterElements;
 
   var mainPinElement = window.service.elements.mainPinElement;
-  var addressFieldElement = window.service.elements.addressFieldElement;
   var roomNumberElement = window.service.elements.roomNumberElement;
   var capacityElement = window.service.elements.capacityElement;
   var typeHousingElement = window.service.elements.typeHousingElement;
@@ -26,18 +25,17 @@
       window.form.toggleInputs(adsFilterElements); // Заблокируем/разблокируем поля фильтров
 
       window.form.validateСapacities(); // Вызываем функцию валидации вместимости
-      addressFieldElement.value = window.map.getPositionPin(mainPinElement); // Указываем текущее расположение метки в поле адреса
 
       if (mapElement.classList.contains('map--faded')) {
-        mainPinElement.addEventListener('mousedown', window.map.onMainPinClick); // Вешаем обработчик клика на метку
-        mainPinElement.addEventListener('keydown', window.map.onMainPinPressEnter); // Вешаем обработчик Enter на метку
+        mainPinElement.addEventListener('mousedown', window.mainPin.onMainPinClick); // Вешаем обработчик клика на метку
+        mainPinElement.addEventListener('keydown', window.mainPin.onMainPinPressEnter); // Вешаем обработчик Enter на метку
 
       } else {
         mapElement.classList.remove('map--faded'); // Разблокируем карту
         adFormElement.classList.remove('ad-form--disabled'); // Разблокируем форму
 
-        mainPinElement.removeEventListener('mousedown', window.map.onMainPinClick); // Удаляем обработчик клика на метку
-        mainPinElement.removeEventListener('keydown', window.map.onMainPinPressEnter); // Удаляем обработчик Enter на метку
+        mainPinElement.removeEventListener('mousedown', window.mainPin.onMainPinClick); // Удаляем обработчик клика на метку
+        mainPinElement.removeEventListener('keydown', window.mainPin.onMainPinPressEnter); // Удаляем обработчик Enter на метку
 
         roomNumberElement.addEventListener('change', function () {
           window.form.validateСapacities(); // Вызываем функцию валидации вместимости

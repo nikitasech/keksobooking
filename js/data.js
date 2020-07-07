@@ -1,8 +1,7 @@
 'use strict';
 
 (function () {
-  var MAP_Y_TOP_LIMIT = 130;
-  var MAP_Y_BOTTOM_LIMIT = 630;
+  var MapLimits = window.service.MapLimits;
 
   var NUMBER_ADS = 8;
 
@@ -13,7 +12,7 @@
   function getAd(numberAd) {
     var numberAvatar = numberAd < 10 ? '0' + numberAd : numberAd;
     var x = window.Util.getRandomNumber(0, pinsContainerElement.clientWidth); // Случайная координата по горизонтали
-    var y = window.Util.getRandomNumber(MAP_Y_TOP_LIMIT, MAP_Y_BOTTOM_LIMIT); // Случайная координата по вертикали
+    var y = window.Util.getRandomNumber(MapLimits.TOP, MapLimits.BOTTOM); // Случайная координата по вертикали
 
     return {
       author: {
