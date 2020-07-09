@@ -1,13 +1,12 @@
 'use strict';
 
 (function () {
-  var MapLimits = window.service.MapLimits;
-
   var NUMBER_ADS = 8;
 
-  var pinsContainerElement = window.service.elements.pinsContainerElement;
-
   var Data = window.service.Data;
+  var MapLimits = window.service.MapLimits;
+
+  var pinsContainerElement = window.service.elements.pinsContainerElement;
 
   function getAd(numberAd) {
     var numberAvatar = numberAd < 10 ? '0' + numberAd : numberAd;

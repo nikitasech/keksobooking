@@ -17,6 +17,34 @@
     PALACE: 10000,
   };
 
+  function validatePrice() {
+    if (typeHousingElement.value === 'bungalo') {
+      priceElement.placeholder = MinPrice.BUNGALO;
+      priceElement.min = MinPrice.BUNGALO;
+
+    } else if (typeHousingElement.value === 'flat') {
+      priceElement.placeholder = MinPrice.FLAT;
+      priceElement.min = MinPrice.FLAT;
+
+    } else if (typeHousingElement.value === 'house') {
+      priceElement.placeholder = MinPrice.HOUSE;
+      priceElement.min = MinPrice.HOUSE;
+
+    } else {
+      priceElement.placeholder = MinPrice.PALACE;
+      priceElement.min = MinPrice.PALACE;
+    }
+  }
+
+  function validateChecks(evt) {
+    if (evt.target === checkinElement) {
+      checkoutElement.value = checkinElement.value;
+
+    } else {
+      checkinElement.value = checkoutElement.value;
+    }
+  }
+
   window.form = {
     validateСapacities: function () {
       if (capacityElement.value > roomNumberElement.value && capacityElement.value !== '0' && roomNumberElement.value !== '100') {
@@ -37,32 +65,26 @@
       }
     },
 
-    validatePrice: function () {
-      if (typeHousingElement.value === 'bungalo') {
-        priceElement.placeholder = MinPrice.BUNGALO;
-        priceElement.min = MinPrice.BUNGALO;
+    hangHandlersValidates: function () {
+      roomNumberElement.addEventListener('change', function () {
+        window.form.validateСapacities(); // Вызываем функцию валидации вместимости
+      });
 
-      } else if (typeHousingElement.value === 'flat') {
-        priceElement.placeholder = MinPrice.FLAT;
-        priceElement.min = MinPrice.FLAT;
+      capacityElement.addEventListener('change', function () {
+        window.form.validateСapacities(); // Вызываем функцию валидации вместимости
+      });
 
-      } else if (typeHousingElement.value === 'house') {
-        priceElement.placeholder = MinPrice.HOUSE;
-        priceElement.min = MinPrice.HOUSE;
+      typeHousingElement.addEventListener('change', function () {
+        validatePrice(); // Вызываем функцию валидации цены
+      });
 
-      } else {
-        priceElement.placeholder = MinPrice.PALACE;
-        priceElement.min = MinPrice.PALACE;
-      }
-    },
+      checkinElement.addEventListener('change', function (evt) {
+        validateChecks(evt); // Вызываем функцию валидации въезда
+      });
 
-    validateChecks: function (evt) {
-      if (evt.target === checkinElement) {
-        checkoutElement.value = checkinElement.value;
-
-      } else {
-        checkinElement.value = checkoutElement.value;
-      }
+      checkoutElement.addEventListener('change', function (evt) {
+        validateChecks(evt); // Вызываем функцию валидации выезда
+      });
     },
 
     toggleInputs: function (elementsArray) {

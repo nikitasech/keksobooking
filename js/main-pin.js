@@ -78,25 +78,30 @@
     document.addEventListener('mouseup', onPinUp); // Добавляем обработчик удаления обработчиков
   }
 
-  mainPinElement.addEventListener('mousedown', function (evt) {
-    evt.preventDefault();
-
-    if (!evt.button) { // Если номер нажатой кнопки мыши равен нулю
-      movePin(evt); // Вызываем передвижение
-    }
-  });
-
   window.mainPin = {
     onMainPinClick: function (evt) {
       if (!evt.button) { // Если номер нажатой кнопки мыши равен нулю
-        window.page.togglePage(); // Вызываем разблокировку страницы
+        window.page.unblockPage(); // Вызываем разблокировку страницы
       }
     },
 
     onMainPinPressEnter: function (evt) {
       if (evt.code === KeyCodes.enter) { // Если нажата клавиша Enter
-        window.page.togglePage(); // Вызываем разблокировку страницы
+        window.page.unblockPage(); // Вызываем разблокировку страницы
       }
+    },
+
+    hangHandlersMainPin: function () {
+      mainPinElement.addEventListener('mousedown', window.mainPin.onMainPinClick); // Вешаем обработчик клика на метку
+      mainPinElement.addEventListener('keydown', window.mainPin.onMainPinPressEnter); // Вешаем обработчик Enter на метку
+
+      mainPinElement.addEventListener('mousedown', function (evt) {
+        evt.preventDefault();
+
+        if (!evt.button) { // Если номер нажатой кнопки мыши равен нулю
+          movePin(evt); // Вызываем передвижение
+        }
+      });
     },
 
     getPositionPin: function (element) {
