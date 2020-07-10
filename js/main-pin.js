@@ -48,16 +48,16 @@
       };
 
       if (coordinatesPin.x < (MapLimits.LEFT - Pin.WIDTH / 2)) { // Если координаты метки по X меньше левого лимита и половины ширины метки...
-        coordinatesPin.x = MapLimits.LEFT - Pin.WIDTH / 2; // ...выставляем максимально возможные координаты
+        coordinatesPin.x = MapLimits.LEFT - Pin.WIDTH / 2 + 1; // ...выставляем максимально возможные координаты (Прибовляется 1, так как далее координата по X округляются в меньшую сторону)
 
       } else if (coordinatesPin.x > (MapLimits.RIGHT - Pin.WIDTH / 2)) { // Если координаты метки по X больше правого лимита и половины ширины метки...
         coordinatesPin.x = MapLimits.RIGHT - Pin.WIDTH / 2; // ...выставляем максимально возможные координаты
       }
 
-      if (coordinatesPin.y < (MapLimits.TOP - Pin.HEIGHT)) { // Если координаты метки по Y меньше верхнего лимита и высоты метки...
+      if (coordinatesPin.y <= (MapLimits.TOP - Pin.HEIGHT)) { // Если координаты метки по Y меньше верхнего лимита и высоты метки...
         coordinatesPin.y = MapLimits.TOP - Pin.HEIGHT; // ...выставляем максимально возможные координаты
 
-      } else if (coordinatesPin.y > (MapLimits.BOTTOM - Pin.HEIGHT)) { // Если координаты метки по Y больше нижнего лимита и высоты метки...
+      } else if (coordinatesPin.y >= (MapLimits.BOTTOM - Pin.HEIGHT)) { // Если координаты метки по Y больше нижнего лимита и высоты метки...
         coordinatesPin.y = MapLimits.BOTTOM - Pin.HEIGHT; // ...выставляем максимально возможные координаты
       }
 
