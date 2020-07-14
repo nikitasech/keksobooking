@@ -10,6 +10,7 @@
 
   window.service = {
     elements: {
+      mainElement: document.querySelector('main'),
       mapElement: mapElement,
       mainPinElement: mainPinElement,
       pinsContainerElement: mapElement.querySelector('.map__pins'),

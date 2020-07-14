@@ -17,6 +17,22 @@
     return element.offsetTop + Pin.HEIGHT; // Отступ всерху + высота метки
   }
 
+  function onMainPinClick(evt) {
+    if (!evt.button) { // Если номер нажатой кнопки мыши равен нулю
+      window.map.toggle(); // Разблокируем карту
+      window.filter.toggle(); // Разблокируем фильтры
+      window.form.toggle(); // Разблокируем форму
+    }
+  }
+
+  function onMainPinPressEnter(evt) {
+    if (evt.code === KeyCodes.enter) { // Если нажата клавиша Enter
+      window.map.toggle(); // Разблокируем карту
+      window.filter.toggle(); // Разблокируем фильтры
+      window.form.toggle(); // Разблокируем форму
+    }
+  }
+
   function movePin(evt) {
     evt.preventDefault();
 
@@ -61,7 +77,7 @@
         coordinatesPin.y = MapLimits.BOTTOM - Pin.HEIGHT; // ...выставляем максимально возможные координаты
       }
 
-      addressFieldElement.value = window.mainPin.getPositionPin(mainPinElement); // Указываем текущее расположение метки в поле адреса
+      addressFieldElement.value = window.mainPin.getPosition(mainPinElement); // Указываем текущее расположение метки в поле адреса
 
       mainPinElement.style.left = coordinatesPin.x + 'px';
       mainPinElement.style.top = coordinatesPin.y + 'px';
@@ -71,7 +87,7 @@
       document.removeEventListener('mousemove', onPinMove); // Удаляем обработчик движения
       document.removeEventListener('mouseup', onPinUp); // Удаляем обработчик удаления обработчиков :D
 
-      addressFieldElement.value = window.mainPin.getPositionPin(mainPinElement); // Указываем текущее расположение метки в поле адреса
+      addressFieldElement.value = window.mainPin.getPosition(mainPinElement); // Указываем текущее расположение метки в поле адреса
     }
 
     document.addEventListener('mousemove', onPinMove); // Добавляем обработчик движения
@@ -79,21 +95,9 @@
   }
 
   window.mainPin = {
-    onMainPinClick: function (evt) {
-      if (!evt.button) { // Если номер нажатой кнопки мыши равен нулю
-        window.page.unblockPage(); // Вызываем разблокировку страницы
-      }
-    },
-
-    onMainPinPressEnter: function (evt) {
-      if (evt.code === KeyCodes.enter) { // Если нажата клавиша Enter
-        window.page.unblockPage(); // Вызываем разблокировку страницы
-      }
-    },
-
-    hangHandlersMainPin: function () {
-      mainPinElement.addEventListener('mousedown', window.mainPin.onMainPinClick); // Вешаем обработчик клика на метку
-      mainPinElement.addEventListener('keydown', window.mainPin.onMainPinPressEnter); // Вешаем обработчик Enter на метку
+    addListeners: function () {
+      mainPinElement.addEventListener('mousedown', onMainPinClick); // Вешаем обработчик клика на метку
+      mainPinElement.addEventListener('keydown', onMainPinPressEnter); // Вешаем обработчик Enter на метку
 
       mainPinElement.addEventListener('mousedown', function (evt) {
         evt.preventDefault();
@@ -104,7 +108,12 @@
       });
     },
 
-    getPositionPin: function (element) {
+    removeListeners: function () {
+      mainPinElement.removeEventListener('mousedown', onMainPinClick); // Удаляем обработчик клика на метку
+      mainPinElement.removeEventListener('keydown', onMainPinPressEnter); // Удаляем обработчик Enter на метку
+    },
+
+    getPosition: function (element) {
       var positionX = getPositionXPin(element);
       var positionY = getPositionYPin(element);
 
