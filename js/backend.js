@@ -3,6 +3,10 @@
 (function () {
   var TIMEOUT = 2000;
 
+  var StatusCodes = {
+    OK: 200,
+  };
+
   window.backend = {
     load: function (url, onSuccess, onError) {
       var xhr = new XMLHttpRequest();
@@ -10,7 +14,7 @@
       xhr.responseType = 'json';
 
       xhr.addEventListener('load', function () {
-        if (xhr.status === 200) {
+        if (xhr.status === StatusCodes.OK) {
           onSuccess(xhr.response);
         } else {
           onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
@@ -36,7 +40,7 @@
       xhr.responseType = 'json';
 
       xhr.addEventListener('load', function () {
-        if (xhr.status === 200) {
+        if (xhr.status === StatusCodes.OK) {
           onSuccess(xhr.response);
         } else {
           onError('Статус ответа ' + xhr.status + ' ' + xhr.statusText);
