@@ -3,14 +3,21 @@
 (function () {
   var TIMEOUT = 2000;
 
+  var StatusCode = {
+    OK: 200,
+  };
+
+  var ResponseType = {
+    JSON: 'json',
+  };
+
   window.backend = {
     load: function (url, onSuccess, onError) {
       var xhr = new XMLHttpRequest();
-
-      xhr.responseType = 'json';
+      xhr.responseType = ResponseType.JSON;
 
       xhr.addEventListener('load', function () {
-        if (xhr.status === 200) {
+        if (xhr.status === StatusCode.OK) {
           onSuccess(xhr.response);
         } else {
           onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
@@ -33,10 +40,10 @@
 
     save: function (url, data, onSuccess, onError) {
       var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
+      xhr.responseType = ResponseType.JSON;
 
       xhr.addEventListener('load', function () {
-        if (xhr.status === 200) {
+        if (xhr.status === StatusCode.OK) {
           onSuccess(xhr.response);
         } else {
           onError('Статус ответа ' + xhr.status + ' ' + xhr.statusText);
