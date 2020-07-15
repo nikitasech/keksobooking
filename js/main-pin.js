@@ -17,6 +17,22 @@
     return element.offsetTop + Pin.HEIGHT; // Отступ всерху + высота метки
   }
 
+  function onMainPinClick(evt) {
+    if (!evt.button) { // Если номер нажатой кнопки мыши равен нулю
+      window.map.toggle(); // Разблокируем карту
+      window.filter.toggle(); // Разблокируем фильтры
+      window.form.toggle(); // Разблокируем форму
+    }
+  }
+
+  function onMainPinPressEnter(evt) {
+    if (evt.code === KeyCodes.enter) { // Если нажата клавиша Enter
+      window.map.toggle(); // Разблокируем карту
+      window.filter.toggle(); // Разблокируем фильтры
+      window.form.toggle(); // Разблокируем форму
+    }
+  }
+
   function movePin(evt) {
     evt.preventDefault();
 
@@ -48,20 +64,20 @@
       };
 
       if (coordinatesPin.x < (MapLimits.LEFT - Pin.WIDTH / 2)) { // Если координаты метки по X меньше левого лимита и половины ширины метки...
-        coordinatesPin.x = MapLimits.LEFT - Pin.WIDTH / 2; // ...выставляем максимально возможные координаты
+        coordinatesPin.x = MapLimits.LEFT - Pin.WIDTH / 2 + 1; // ...выставляем максимально возможные координаты (Прибовляется 1, так как далее координата по X округляются в меньшую сторону)
 
       } else if (coordinatesPin.x > (MapLimits.RIGHT - Pin.WIDTH / 2)) { // Если координаты метки по X больше правого лимита и половины ширины метки...
         coordinatesPin.x = MapLimits.RIGHT - Pin.WIDTH / 2; // ...выставляем максимально возможные координаты
       }
 
-      if (coordinatesPin.y < (MapLimits.TOP - Pin.HEIGHT)) { // Если координаты метки по Y меньше верхнего лимита и высоты метки...
+      if (coordinatesPin.y <= (MapLimits.TOP - Pin.HEIGHT)) { // Если координаты метки по Y меньше верхнего лимита и высоты метки...
         coordinatesPin.y = MapLimits.TOP - Pin.HEIGHT; // ...выставляем максимально возможные координаты
 
-      } else if (coordinatesPin.y > (MapLimits.BOTTOM - Pin.HEIGHT)) { // Если координаты метки по Y больше нижнего лимита и высоты метки...
+      } else if (coordinatesPin.y >= (MapLimits.BOTTOM - Pin.HEIGHT)) { // Если координаты метки по Y больше нижнего лимита и высоты метки...
         coordinatesPin.y = MapLimits.BOTTOM - Pin.HEIGHT; // ...выставляем максимально возможные координаты
       }
 
-      addressFieldElement.value = window.mainPin.getPositionPin(mainPinElement); // Указываем текущее расположение метки в поле адреса
+      addressFieldElement.value = window.mainPin.getPosition(mainPinElement); // Указываем текущее расположение метки в поле адреса
 
       mainPinElement.style.left = coordinatesPin.x + 'px';
       mainPinElement.style.top = coordinatesPin.y + 'px';
@@ -71,35 +87,33 @@
       document.removeEventListener('mousemove', onPinMove); // Удаляем обработчик движения
       document.removeEventListener('mouseup', onPinUp); // Удаляем обработчик удаления обработчиков :D
 
-      addressFieldElement.value = window.mainPin.getPositionPin(mainPinElement); // Указываем текущее расположение метки в поле адреса
+      addressFieldElement.value = window.mainPin.getPosition(mainPinElement); // Указываем текущее расположение метки в поле адреса
     }
 
     document.addEventListener('mousemove', onPinMove); // Добавляем обработчик движения
     document.addEventListener('mouseup', onPinUp); // Добавляем обработчик удаления обработчиков
   }
 
-  mainPinElement.addEventListener('mousedown', function (evt) {
-    evt.preventDefault();
-
-    if (!evt.button) { // Если номер нажатой кнопки мыши равен нулю
-      movePin(evt); // Вызываем передвижение
-    }
-  });
-
   window.mainPin = {
-    onMainPinClick: function (evt) {
-      if (!evt.button) { // Если номер нажатой кнопки мыши равен нулю
-        window.page.togglePage(); // Вызываем разблокировку страницы
-      }
+    addListeners: function () {
+      mainPinElement.addEventListener('mousedown', onMainPinClick); // Вешаем обработчик клика на метку
+      mainPinElement.addEventListener('keydown', onMainPinPressEnter); // Вешаем обработчик Enter на метку
+
+      mainPinElement.addEventListener('mousedown', function (evt) {
+        evt.preventDefault();
+
+        if (!evt.button) { // Если номер нажатой кнопки мыши равен нулю
+          movePin(evt); // Вызываем передвижение
+        }
+      });
     },
 
-    onMainPinPressEnter: function (evt) {
-      if (evt.code === KeyCodes.enter) { // Если нажата клавиша Enter
-        window.page.togglePage(); // Вызываем разблокировку страницы
-      }
+    removeListeners: function () {
+      mainPinElement.removeEventListener('mousedown', onMainPinClick); // Удаляем обработчик клика на метку
+      mainPinElement.removeEventListener('keydown', onMainPinPressEnter); // Удаляем обработчик Enter на метку
     },
 
-    getPositionPin: function (element) {
+    getPosition: function (element) {
       var positionX = getPositionXPin(element);
       var positionY = getPositionYPin(element);
 

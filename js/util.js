@@ -38,6 +38,12 @@
       } else {
         container.appendChild(fragment); // Вставляем фрагмент в разметку
       }
+    },
+
+    toggleInputs: function (elementsArray) {
+      elementsArray.forEach(function (item) {
+        item.disabled = !item.disabled; // Разблокируем елемент
+      });
     }
   };
 })();

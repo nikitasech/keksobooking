@@ -1,56 +1,34 @@
 'use strict';
 
 (function () {
-  var MapLimits = window.service.MapLimits;
-
-  var NUMBER_ADS = 8;
+  var NUMBER_ADS = 5;
 
   var pinsContainerElement = window.service.elements.pinsContainerElement;
+  var mainElement = window.service.elements.mainElement;
 
-  var Data = window.service.Data;
+  window.data = {
+    onLoadSuccess: function (data) {
+      var ads = data;
+      var pinsElements = ads.map(window.pin.createElement); // Формируем массив элементов меток
+      var cardsElements = ads.map(window.card.createElement); // Создаем массив из карточек
 
-  function getAd(numberAd) {
-    var numberAvatar = numberAd < 10 ? '0' + numberAd : numberAd;
-    var x = window.Util.getRandomNumber(0, pinsContainerElement.clientWidth); // Случайная координата по горизонтали
-    var y = window.Util.getRandomNumber(MapLimits.TOP, MapLimits.BOTTOM); // Случайная координата по вертикали
+      window.map.addListenersPins(pinsElements, cardsElements); // Вешаем обработчики событий на метки из массива
 
-    return {
-      author: {
-        avatar: 'img/avatars/user' + numberAvatar + '.png', // Генерируем ссылку на аватарку
-      },
+      pinsElements.forEach(function (element) {
+        element.classList.add('hidden');
+      });
 
-      offer: {
-        title: 'Заголовок объявления',
-        address: x + ', ' + y,
-        price: window.Util.getRandomNumber(500, 10000), // Генерируем случайную цену
-        type: Data.types[window.Util.getRandomNumber(0, Data.types.length)], // Выбираем случайный тип объявления
-        rooms: window.Util.getRandomNumber(1, 100), // Генерируем случайное кол-во комнат
-        guests: window.Util.getRandomNumber(0, 3), // Генерируем случайное кол-во гостей
-        checkin: Data.checks[window.Util.getRandomNumber(0, Data.checks.length)], // Случайно выбираем дату заезда
-        checkout: Data.checks[window.Util.getRandomNumber(0, Data.checks.length)], // Случайно выбираем дату выезда
-        features: window.Util.getRandomArray(Data.features), // Случайно генерируем особенности
-        description: 'Описание объявления',
-        photos: window.Util.getRandomArray(Data.photos), // Случайно генерируем фото
-      },
+      window.Util.renderElements(pinsElements.slice(0, NUMBER_ADS), pinsContainerElement); // Отрисовываем метки
+    },
 
-      location: {
-        x: x,
-        y: y,
-      },
-    };
-  }
+    onLoadError: function (message) {
+      var modalErrorElement = document.querySelector('#load-error')
+      .content
+      .querySelector('.load-error');
 
-  function getAds(quantity) {
-    var ads = []; // Создаём массив объявлений
+      modalErrorElement.textContent = message;
 
-    for (var ad = 0; ad < quantity; ad++) {
-      var numberAd = ad + 1; // Номер текущего объявления
-
-      ads.push(getAd(numberAd)); // Вставляем в массив текущее объявление
-    }
-
-    return ads; // Возвращаем массив
-  }
-
-  window.ads = getAds(NUMBER_ADS);
+      window.Util.renderElements(modalErrorElement, mainElement);
+    },
+  };
 })();
