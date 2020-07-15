@@ -26,7 +26,7 @@
   }
 
   function onMainPinPressEnter(evt) {
-    if (evt.code === KeyCodes.enter) { // Если нажата клавиша Enter
+    if (evt.code === KeyCodes.ENTER) { // Если нажата клавиша Enter
       window.map.toggle(); // Разблокируем карту
       window.filter.toggle(); // Разблокируем фильтры
       window.form.toggle(); // Разблокируем форму

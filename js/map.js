@@ -7,7 +7,7 @@
   var filtersContainerElement = window.service.elements.filtersContainerElement;
 
   function onCardPressEsc(evt) {
-    if (evt.code === KeyCodes.esc) {
+    if (evt.code === KeyCodes.ESC) {
       closeCard(); // Закрываем карточку
     }
   }
@@ -41,7 +41,7 @@
     });
 
     pin.addEventListener('keydown', function (evt) { // Обработчик открытия на enter
-      if (evt.keyCode === KeyCodes.enter) {
+      if (evt.keyCode === KeyCodes.ENTER) {
         openCard(card);
       }
     });

@@ -53,8 +53,8 @@
     },
 
     KeyCodes: {
-      enter: 'Enter',
-      esc: 'Escape',
+      ENTER: 'Enter',
+      ESC: 'Escape',
     },
   };
 })();
