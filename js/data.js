@@ -1,7 +1,8 @@
 'use strict';
 
 (function () {
-  var NUMBER_ADS = 8;
+  var NUMBER_ADS = 5;
+
   var pinsContainerElement = window.service.elements.pinsContainerElement;
   var mainElement = window.service.elements.mainElement;
 
