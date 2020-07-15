@@ -7,11 +7,14 @@
     OK: 200,
   };
 
+  var ResponseTypes = {
+    JSON: 'json',
+  };
+
   window.backend = {
     load: function (url, onSuccess, onError) {
       var xhr = new XMLHttpRequest();
-
-      xhr.responseType = 'json';
+      xhr.responseType = ResponseTypes.JSON;
 
       xhr.addEventListener('load', function () {
         if (xhr.status === StatusCodes.OK) {
@@ -37,7 +40,7 @@
 
     save: function (url, data, onSuccess, onError) {
       var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
+      xhr.responseType = ResponseTypes.JSON;
 
       xhr.addEventListener('load', function () {
         if (xhr.status === StatusCodes.OK) {
