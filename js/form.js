@@ -66,11 +66,11 @@
 
   function hangHandlersValidates() {
     roomNumberElement.addEventListener('change', function () {
-      window.form.validateСapacities(); // Вызываем функцию валидации вместимости
+      validateСapacities(); // Вызываем функцию валидации вместимости
     });
 
     capacityElement.addEventListener('change', function () {
-      window.form.validateСapacities(); // Вызываем функцию валидации вместимости
+      validateСapacities(); // Вызываем функцию валидации вместимости
     });
 
     typeHousingElement.addEventListener('change', function () {
