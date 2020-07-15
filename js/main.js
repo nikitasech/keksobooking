@@ -5,6 +5,11 @@
 
   var mainPinElement = window.service.elements.mainPinElement;
   var addressFieldElement = window.service.elements.addressFieldElement;
+  var adFieldsetElements = window.service.elements.adFieldsetElements;
+  var adsFilterElements = window.service.elements.adsFilterElements;
+
+  window.Util.toggleInputs(adFieldsetElements);
+  window.Util.toggleInputs(adsFilterElements);
 
   window.backend.load(LOAD_URL, window.data.onLoadSuccess, window.data.onLoadError);
   addressFieldElement.value = window.mainPin.getPosition(mainPinElement); // Выставим адрес в нужное поле

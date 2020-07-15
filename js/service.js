@@ -15,11 +15,8 @@
       mainPinElement: mainPinElement,
       pinsContainerElement: mapElement.querySelector('.map__pins'),
       filtersContainerElement: document.querySelector('.map__filters-container'),
-
       adsFilterElements: mapElement.querySelectorAll('.map__filters > *'),
-
       adFormElement: adFormElement,
-
       adFieldsetElements: adFormElement.querySelectorAll('fieldset'),
       addressFieldElement: adFormElement.querySelector('#address'),
       roomNumberElement: adFormElement.querySelector('#room_number'),
