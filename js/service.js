@@ -14,7 +14,8 @@
       mapElement: mapElement,
       mainPinElement: mainPinElement,
       pinsContainerElement: mapElement.querySelector('.map__pins'),
-      filtersContainerElement: document.querySelector('.map__filters-container'),
+      filtersContainerElement: mapElement.querySelector('.map__filters-container'),
+      filtersFormElement: mapElement.querySelector('.map__filters'),
       adsFilterElements: mapElement.querySelectorAll('.map__filters > *'),
       adFormElement: adFormElement,
       adFieldsetElements: adFormElement.querySelectorAll('fieldset'),
@@ -43,6 +44,8 @@
     Pin: {
       WIDTH: PIN_WIDTH, // Берём ширину метки и записываем в переменную
       HEIGHT: PIN_HEIGHT, // Высота метки + высота иголки
+      SORCE_X: mainPinElement.offsetLeft,
+      SORCE_Y: mainPinElement.offsetTop,
     },
 
     MapLimits: {

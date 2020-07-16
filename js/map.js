@@ -51,14 +51,26 @@
     toggle: function (isLoadPage) {
       var pinsElements = mapElement.querySelectorAll('.map__pin');
 
-      if (isLoadPage) {
+      // Если это не загрузка страницы то переключаем состояние карты
+      if (!isLoadPage) {
+        mapElement.classList.toggle('map--faded');
+      }
+
+      // Если карта неактивна
+      if (mapElement.classList.contains('map--faded')) {
         window.mainPin.addListeners(); // Добавим обработчики на клавную метку
+
+        // Проходимся по пинам и скрываем их, игнорируя первый
+        pinsElements.forEach(function (pin, index) {
+          if (index) {
+            pin.classList.add('hidden');
+          }
+        });
       } else {
-        mapElement.classList.toggle('map--faded'); // Разблокируем карту
         window.mainPin.removeListeners(); // Удалим обработчики с клавной метки
 
         pinsElements.forEach(function (pin) {
-          pin.classList.remove('hidden');
+          pin.classList.remove('hidden'); // Показываем все пины
         });
       }
     },
