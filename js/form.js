@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var SAVE_URL = 'https://javasfcript.pages.academy/keksobooking';
+  var SAVE_URL = 'https://javascript.pages.academy/keksobooking';
 
   var mainPinElement = window.service.elements.mainPinElement;
   var mainElement = window.service.elements.mainElement;
