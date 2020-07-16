@@ -3,7 +3,6 @@
 (function () {
   var SAVE_URL = 'https://javasfcript.pages.academy/keksobooking';
 
-  var mapElement = window.service.elements.mapElement;
   var mainPinElement = window.service.elements.mainPinElement;
   var mainElement = window.service.elements.mainElement;
   var adFormElement = window.service.elements.adFormElement;
