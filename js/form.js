@@ -21,6 +21,68 @@
 
   var KeyCodes = window.service.KeyCodes;
 
+  function openError() {
+    var template = document.querySelector('#error')
+    .content
+    .querySelector('.error');
+
+    var errorElement = template.cloneNode(true);
+    var buttonElement = errorElement.querySelector('.error__button');
+
+    errorElement.addEventListener('click', onErrorClick);
+    buttonElement.addEventListener('click', onErrorClick);
+    document.addEventListener('keydown', onErrorPressEsc);
+
+    window.Util.renderElements(errorElement, mainElement);
+  }
+
+  function closeError() {
+    var errorElement = document.querySelector('.error');
+    var buttonElement = errorElement.querySelector('.error__button');
+
+    errorElement.removeEventListener('click', onErrorClick);
+    buttonElement.removeEventListener('click', onErrorClick);
+    document.removeEventListener('keydown', onSuccessPressEsc);
+
+    errorElement.remove();
+  }
+
+  function onSaveSuccess() {
+    openSuccess();
+  }
+
+  function onSaveError() {
+    openError();
+  }
+
+  function onSuccessClick(evt) {
+    var messageElement = document.querySelector('.success__message');
+
+    if (evt.target !== messageElement) {
+      closeSuccess();
+    }
+  }
+
+  function onSuccessPressEsc(evt) {
+    if (evt.code === KeyCodes.ESC) {
+      closeSuccess();
+    }
+  }
+
+  function onErrorClick(evt) {
+    var messageElement = document.querySelector('.error__message');
+
+    if (evt.target !== messageElement) {
+      closeError();
+    }
+  }
+
+  function onErrorPressEsc(evt) {
+    if (evt.code === KeyCodes.ESC) {
+      closeError();
+    }
+  }
+
   function validatePrice() {
     if (typeHousingElement.value === 'bungalo') {
       priceElement.placeholder = MinPrice.BUNGALO;
@@ -98,26 +160,12 @@
     });
   }
 
-  function closeSuccess() {
-    var successElement = document.querySelector('.success');
-
-    successElement.removeEventListener('click', onSuccessClick);
-    document.removeEventListener('keydown', onSuccessPressEsc);
-    successElement.remove();
-  }
-
-  function closeError() {
-    var errorElement = document.querySelector('.error');
-
-    errorElement.removeEventListener('click', onErrorClick);
-    document.removeEventListener('keydown', onSuccessPressEsc);
-    errorElement.remove();
-  }
-
   function openSuccess() {
-    var successElement = document.querySelector('#success')
+    var template = document.querySelector('#success')
     .content
     .querySelector('.success');
+
+    var successElement = template.cloneNode(true);
 
     adFormElement.reset();
     successElement.addEventListener('click', onSuccessClick);
@@ -125,44 +173,12 @@
     window.Util.renderElements(successElement, mainElement);
   }
 
-  function openError() {
-    var errorElement = document.querySelector('#error')
-    .content
-    .querySelector('.error');
+  function closeSuccess() {
+    var successElement = document.querySelector('.success');
 
-    console.log(document.querySelector('#error'));
-
-    errorElement.addEventListener('click', onErrorClick);
-    document.addEventListener('keydown', onErrorPressEsc);
-    window.Util.renderElements(errorElement, mainElement);
-  }
-
-  function onSuccessPressEsc(evt) {
-    if (evt.code === KeyCodes.ESC) {
-      closeSuccess();
-    }
-  }
-
-  function onSuccessClick() {
-    closeSuccess();
-  }
-
-  function onErrorPressEsc(evt) {
-    if (evt.code === KeyCodes.ESC) {
-      closeError();
-    }
-  }
-
-  function onErrorClick() {
-    closeError();
-  }
-
-  function onSaveSuccess() {
-    openSuccess();
-  }
-
-  function onSaveError() {
-    openError();
+    successElement.removeEventListener('click', onSuccessClick);
+    document.removeEventListener('keydown', onSuccessPressEsc);
+    successElement.remove();
   }
 
   window.form = {
