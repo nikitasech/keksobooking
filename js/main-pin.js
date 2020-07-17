@@ -26,7 +26,7 @@
   }
 
   function onMainPinPressEnter(evt) {
-    if (evt.code === KeyCodes.enter) { // Если нажата клавиша Enter
+    if (evt.code === KeyCodes.ENTER) { // Если нажата клавиша Enter
       window.map.toggle(); // Разблокируем карту
       window.filter.toggle(); // Разблокируем фильтры
       window.form.toggle(); // Разблокируем форму
@@ -94,23 +94,25 @@
     document.addEventListener('mouseup', onPinUp); // Добавляем обработчик удаления обработчиков
   }
 
+  function onMainPinMove(evt) {
+    // Если номер нажатой кнопки мыши равен нулю
+    if (!evt.button) {
+      movePin(evt); // Вызываем передвижение
+    }
+  }
+
   window.mainPin = {
     addListeners: function () {
       mainPinElement.addEventListener('mousedown', onMainPinClick); // Вешаем обработчик клика на метку
       mainPinElement.addEventListener('keydown', onMainPinPressEnter); // Вешаем обработчик Enter на метку
-
-      mainPinElement.addEventListener('mousedown', function (evt) {
-        evt.preventDefault();
-
-        if (!evt.button) { // Если номер нажатой кнопки мыши равен нулю
-          movePin(evt); // Вызываем передвижение
-        }
-      });
+      mainPinElement.addEventListener('mousedown', onMainPinMove); // Вешаем обработчик движения метки
     },
 
     removeListeners: function () {
       mainPinElement.removeEventListener('mousedown', onMainPinClick); // Удаляем обработчик клика на метку
       mainPinElement.removeEventListener('keydown', onMainPinPressEnter); // Удаляем обработчик Enter на метку
+      mainPinElement.addEventListener('mousedown', onMainPinMove); // Удаляем обработчик движения метки
+
     },
 
     getPosition: function (element) {
