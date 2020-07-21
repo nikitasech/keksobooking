@@ -3,6 +3,7 @@
 (function () {
   var mapElement = window.service.elements.mapElement;
   var mainPinElement = window.service.elements.mainPinElement;
+  var filtersFormElement = window.service.elements.filtersFormElement;
   var addressFieldElement = window.service.elements.addressFieldElement;
 
   var Pin = window.service.Pin;
@@ -20,16 +21,30 @@
   function onMainPinClick(evt) {
     if (!evt.button) { // Если номер нажатой кнопки мыши равен нулю
       window.map.toggle(); // Разблокируем карту
-      window.filter.toggle(); // Разблокируем фильтры
       window.form.toggle(); // Разблокируем форму
+      if (window.adsData) {
+        window.filter.toggle(); // Разблокируем фильтры
+
+        // Вешаем обработчик на фильтры
+        filtersFormElement.addEventListener('change', function () {
+          window.filter.render(window.adsData);
+        });
+      }
     }
   }
 
   function onMainPinPressEnter(evt) {
     if (evt.code === KeyCodes.ENTER) { // Если нажата клавиша Enter
       window.map.toggle(); // Разблокируем карту
-      window.filter.toggle(); // Разблокируем фильтры
       window.form.toggle(); // Разблокируем форму
+      if (window.adsData) {
+        window.filter.toggle(); // Разблокируем фильтры
+
+        // Вешаем обработчик на фильтры
+        filtersFormElement.addEventListener('change', function () {
+          window.filter.render(window.adsData);
+        });
+      }
     }
   }
 
@@ -101,29 +116,32 @@
     }
   }
 
+  function addListenersMainPin() {
+    mainPinElement.addEventListener('mousedown', onMainPinClick); // Вешаем обработчик клика на метку
+    mainPinElement.addEventListener('keydown', onMainPinPressEnter); // Вешаем обработчик Enter на метку
+    mainPinElement.addEventListener('mousedown', onMainPinMove); // Вешаем обработчик движения метки
+  }
+
+  function removeListenersMainPin() {
+    mainPinElement.removeEventListener('mousedown', onMainPinClick); // Удаляем обработчик клика на метку
+    mainPinElement.removeEventListener('keydown', onMainPinPressEnter); // Удаляем обработчик Enter на метку
+    mainPinElement.addEventListener('mousedown', onMainPinMove); // Удаляем обработчик движения метки
+  }
+
+  function getPositionMainPin(element) {
+    var positionX = getPositionXPin(element);
+    var positionY = getPositionYPin(element);
+
+    if (mapElement.classList.contains('map--faded')) { // Если карта заблокирована
+      positionY = element.offsetTop + Pin.WIDTH / 2; // Отступ сверху + половина высоты без иголки
+    }
+
+    return Math.floor(positionX) + ', ' + Math.floor(positionY);
+  }
+
   window.mainPin = {
-    addListeners: function () {
-      mainPinElement.addEventListener('mousedown', onMainPinClick); // Вешаем обработчик клика на метку
-      mainPinElement.addEventListener('keydown', onMainPinPressEnter); // Вешаем обработчик Enter на метку
-      mainPinElement.addEventListener('mousedown', onMainPinMove); // Вешаем обработчик движения метки
-    },
-
-    removeListeners: function () {
-      mainPinElement.removeEventListener('mousedown', onMainPinClick); // Удаляем обработчик клика на метку
-      mainPinElement.removeEventListener('keydown', onMainPinPressEnter); // Удаляем обработчик Enter на метку
-      mainPinElement.addEventListener('mousedown', onMainPinMove); // Удаляем обработчик движения метки
-
-    },
-
-    getPosition: function (element) {
-      var positionX = getPositionXPin(element);
-      var positionY = getPositionYPin(element);
-
-      if (mapElement.classList.contains('map--faded')) { // Если карта заблокирована
-        positionY = element.offsetTop + Pin.WIDTH / 2; // Отступ сверху + половина высоты без иголки
-      }
-
-      return Math.floor(positionX) + ', ' + Math.floor(positionY);
-    },
+    addListeners: addListenersMainPin,
+    removeListeners: removeListenersMainPin,
+    getPosition: getPositionMainPin
   };
 })();
