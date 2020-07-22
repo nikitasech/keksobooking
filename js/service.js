@@ -1,21 +1,25 @@
 'use strict';
 
 (function () {
-  var mapElement = document.querySelector('.map');
-  var adFormElement = document.querySelector('.ad-form');
+  var mainElement = document.querySelector('main');
+  var mapElement = mainElement.querySelector('.map');
   var mainPinElement = mapElement.querySelector('.map__pin--main');
+  var filtersContainerElement = mapElement.querySelector('.map__filters-container');
+  var adFormElement = mainElement.querySelector('.ad-form');
 
   var PIN_WIDTH = mainPinElement.offsetWidth; // Берём ширину метки и записываем в переменную
   var PIN_HEIGHT = PIN_WIDTH + 10; // Высота метки + высота иголки
 
   window.service = {
+    MAX_NUMBER_ADS: 5,
+
     elements: {
-      mainElement: document.querySelector('main'),
+      mainElement: mainElement,
       mapElement: mapElement,
       mainPinElement: mainPinElement,
       pinsContainerElement: mapElement.querySelector('.map__pins'),
-      filtersContainerElement: mapElement.querySelector('.map__filters-container'),
-      filtersFormElement: mapElement.querySelector('.map__filters'),
+      filtersContainerElement: filtersContainerElement,
+      filtersFormElement: filtersContainerElement.querySelector('.map__filters'),
       adsFilterElements: mapElement.querySelectorAll('.map__filters > *'),
       adFormElement: adFormElement,
       adFieldsetElements: adFormElement.querySelectorAll('fieldset'),
@@ -42,8 +46,8 @@
     },
 
     Pin: {
-      WIDTH: PIN_WIDTH, // Берём ширину метки и записываем в переменную
-      HEIGHT: PIN_HEIGHT, // Высота метки + высота иголки
+      WIDTH: PIN_WIDTH,
+      HEIGHT: PIN_HEIGHT,
       SORCE_X: mainPinElement.offsetLeft,
       SORCE_Y: mainPinElement.offsetTop,
     },

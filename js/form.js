@@ -17,11 +17,11 @@
   var filtersElement = window.service.elements.filtersFormElement;
   var adFormResetElement = adFormElement.querySelector('.ad-form__reset');
 
-  var MinPrice = {
-    BUNGALO: 0,
-    FLAT: 1000,
-    HOUSE: 5000,
-    PALACE: 10000,
+  var typeToMinPrice = {
+    'bungalo': '0',
+    'flat': '1000',
+    'house': '5000',
+    'palace': '10000',
   };
 
   var Pin = window.service.Pin;
@@ -90,22 +90,8 @@
   }
 
   function validatePrice() {
-    if (typeHousingElement.value === 'bungalo') {
-      priceElement.placeholder = MinPrice.BUNGALO;
-      priceElement.min = MinPrice.BUNGALO;
-
-    } else if (typeHousingElement.value === 'flat') {
-      priceElement.placeholder = MinPrice.FLAT;
-      priceElement.min = MinPrice.FLAT;
-
-    } else if (typeHousingElement.value === 'house') {
-      priceElement.placeholder = MinPrice.HOUSE;
-      priceElement.min = MinPrice.HOUSE;
-
-    } else {
-      priceElement.placeholder = MinPrice.PALACE;
-      priceElement.min = MinPrice.PALACE;
-    }
+    priceElement.placeholder = typeToMinPrice[typeHousingElement.value];
+    priceElement.min = typeToMinPrice[typeHousingElement.value];
   }
 
   function validateChecks(evt) {
@@ -195,38 +181,49 @@
   }
 
   function openSuccess() {
+    // Находим и клонируем шаблон окна успешной отправки формы
     var template = document.querySelector('#success')
     .content
     .querySelector('.success');
-
     var successElement = template.cloneNode(true);
 
+    // Сбрасываем форму
     adFormElement.reset();
+
+    // Вешаем обработчики скрытия окна успешной отправки
     successElement.addEventListener('click', onSuccessClick);
     document.addEventListener('keydown', onSuccessPressEsc);
+
+    // Отрисовываем шаблон
     window.Util.renderElements(successElement, mainElement);
   }
 
   function closeSuccess() {
+    // Находим шаблон окна успешной отправки формы
     var successElement = document.querySelector('.success');
 
+    // Удаляем обработчики с окна
     successElement.removeEventListener('click', onSuccessClick);
     document.removeEventListener('keydown', onSuccessPressEsc);
+
+    // Удаляем окно
     successElement.remove();
   }
 
-  window.form = {
-    toggle: function () {
-      adFormElement.classList.toggle('ad-form--disabled'); // Разблокируем форму
+  function toggleForm() {
+    adFormElement.classList.toggle('ad-form--disabled'); // Разблокируем форму
 
-      if (adFormElement.classList.contains('ad-form--disabled')) {
-        window.Util.toggleInputs(adFieldsetElements); // Заблокируем поля добавления объявления
-        removeListenersForm(); // Удаляем обработчики формы
-      } else {
-        window.Util.toggleInputs(adFieldsetElements); // Разблокируем поля добавления объявления
-        validateСapacities(); // Вызываем валидации вместимости
-        addListenersForm(); // Повесим обработчики формы
-      }
+    if (adFormElement.classList.contains('ad-form--disabled')) {
+      window.Util.toggleInputs(adFieldsetElements); // Заблокируем поля добавления объявления
+      removeListenersForm(); // Удаляем обработчики формы
+    } else {
+      window.Util.toggleInputs(adFieldsetElements); // Разблокируем поля добавления объявления
+      validateСapacities(); // Вызываем валидации вместимости
+      addListenersForm(); // Повесим обработчики формы
     }
+  }
+
+  window.form = {
+    toggle: toggleForm
   };
 })();
