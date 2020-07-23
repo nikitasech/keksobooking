@@ -101,11 +101,11 @@
   var renderFilterAds = window.debounce(function (data) {
     var checkedFeatures = getCheckedFeatures();
 
-    var filterData = checkNeedFilter(data, housingTypeElement, filterType);
-    filterData = checkNeedFilter(filterData, priceElement, filterPrice);
-    filterData = checkNeedFilter(filterData, roomsElement, filterRooms);
-    filterData = checkNeedFilter(filterData, guestsElement, filterGuests);
-    filterData = checkNeedFilter(filterData, checkedFeatures, filterFeatures);
+    var filterData = checkNeedFilter(data, housingTypeElement, filterType)
+    .checkNeedFilter(filterData, priceElement, filterPrice)
+    .checkNeedFilter(filterData, roomsElement, filterRooms)
+    .checkNeedFilter(filterData, guestsElement, filterGuests)
+    .checkNeedFilter(filterData, checkedFeatures, filterFeatures);
 
     window.map.renderPins(filterData.slice(0, MAX_NUMBER_ADS));
   });

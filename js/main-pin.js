@@ -7,15 +7,13 @@
   var addressFieldElement = window.service.elements.addressFieldElement;
 
   var Pin = window.service.Pin;
-
+  var KeyCodes = window.service.KeyCodes;
   var MapLimits = {
     TOP: 130,
     BOTTOM: 630,
     LEFT: 0,
     RIGHT: mapElement.offsetWidth,
   };
-
-  var KeyCodes = window.service.KeyCodes;
 
   function getPositionXPin(element) {
     return element.offsetLeft + Pin.WIDTH / 2; // Отступ слева + половина ширины метки
