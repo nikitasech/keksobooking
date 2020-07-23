@@ -11,7 +11,7 @@
   window.Util.toggleInputs(adFieldsetElements);
   window.Util.toggleInputs(adsFilterElements);
 
-  window.backend.load(LOAD_URL, window.data.onLoadSuccess, window.data.onLoadError);
+  window.backend.askResponce('GET', LOAD_URL, window.data.onLoadSuccess, window.data.onLoadError);
   addressFieldElement.value = window.mainPin.getPosition(mainPinElement); // Выставим адрес в нужное поле
   window.mainPin.addListeners(); // Вешаем обработчики на главную метку
 })();

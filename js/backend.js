@@ -11,7 +11,7 @@
     JSON: 'json',
   };
 
-  function loadData(url, onSuccess, onError) {
+  function askResponse(typeRequest, url, onSuccess, onError, data) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = ResponseType.JSON;
 
@@ -24,47 +24,29 @@
     });
 
     xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения. Попробуйте перезагрузить страницу');
-    });
-
-    xhr.addEventListener('timeout', function () {
-      onError('Не удалось получить ответ от сервера за ' + xhr.timeout + 'мс');
-    });
-
-    xhr.timeout = TIMEOUT;
-
-    xhr.open('GET', url);
-    xhr.send();
-  }
-
-  function saveData(url, data, onSuccess, onError) {
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = ResponseType.JSON;
-
-    xhr.addEventListener('load', function () {
-      if (xhr.status === StatusCode.OK) {
-        onSuccess(xhr.response);
+      if (typeRequest === 'POST') {
+        onError('Произошла ошибка соединения');
       } else {
-        onError('Статус ответа ' + xhr.status + ' ' + xhr.statusText);
+        onError('Произошла ошибка соединения. Попробуйте перезагрузить страницу');
       }
     });
 
-    xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
-    });
-
     xhr.addEventListener('timeout', function () {
       onError('Не удалось получить ответ от сервера за ' + xhr.timeout + 'мс');
     });
 
     xhr.timeout = TIMEOUT;
 
-    xhr.open('POST', url);
-    xhr.send(data);
+    xhr.open(typeRequest, url);
+
+    if (data) {
+      xhr.send(data);
+    } else {
+      xhr.send();
+    }
   }
 
   window.backend = {
-    load: loadData,
-    save: saveData
+    askResponce: askResponse
   };
 })();

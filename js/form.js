@@ -55,6 +55,7 @@
 
   function onSaveSuccess() {
     openSuccess();
+    throwOff();
   }
 
   function onSaveError() {
@@ -138,8 +139,7 @@
     evt.preventDefault();
 
     var data = new FormData(adFormElement);
-
-    window.backend.save(SAVE_URL, data, onSaveSuccess, onSaveError);
+    window.backend.askResponce('POST', SAVE_URL, onSaveSuccess, onSaveError, data);
   }
 
   function throwOff() {

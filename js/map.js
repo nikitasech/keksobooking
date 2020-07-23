@@ -15,17 +15,22 @@
 
   function closeCard() {
     var cardElement = mapElement.querySelector('.map__card'); // Находим карточку
+    var pinElement = mapElement.querySelector('.map__pin--active');
 
     if (cardElement) {
       cardElement.remove(); // Удаляем из разметки все старые объявления если они есть
+    }
+    if (pinElement) {
+      pinElement.classList.remove('map__pin--active'); // Удаляем класс активного пина
     }
 
     document.removeEventListener('keydown', onCardPressEsc);
   }
 
-  function openCard(card) {
+  function openCard(card, pin) {
     closeCard(); // Закрываем предыдущюю карточку
 
+    pin.classList.add('map__pin--active');
     window.Util.renderElements(card, mapElement, filtersContainerElement); // Отрисовываем карточку нужного объявления перед фильтрами
 
     var cardCloseButton = document.querySelector('.popup__close'); // Найдём кнопку закрытия
@@ -38,12 +43,12 @@
 
   function addListnerPin(pin, card) {
     pin.addEventListener('click', function () { // Обработчик открытия карточки
-      openCard(card);
+      openCard(card, pin);
     });
 
     pin.addEventListener('keydown', function (evt) { // Обработчик открытия на enter
       if (evt.keyCode === KeyCodes.ENTER) {
-        openCard(card);
+        openCard(card, pin);
       }
     });
   }
@@ -51,6 +56,7 @@
   function toggleMap(isLoadPage) {
     var pinsElements = mapElement.querySelectorAll('.map__pin');
 
+    closeCard(); // Закрываем карточку
     // Если это не загрузка страницы то переключаем состояние карты
     if (!isLoadPage) {
       mapElement.classList.toggle('map--faded');
