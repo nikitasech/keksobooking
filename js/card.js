@@ -1,6 +1,13 @@
 'use strict';
 
 (function () {
+  var workerTypeToType = {
+    'palace': 'Дворец',
+    'flat': 'Квартира',
+    'house': 'Дом',
+    'bungalo': 'Бунгало',
+  };
+
   function createImagesElements(object, cardElement) {
     var cardPhotosElement = cardElement.querySelector('.popup__photos');
 
@@ -53,7 +60,7 @@
     cardTitleElement.textContent = object.offer.title;
     cardAddressElement.textContent = object.offer.address;
     cardPriceElement.textContent = object.offer.price + '₽/ночь';
-    cardTypeElement.textContent = window.service.Data.TypesTranslate[object.offer.type];
+    cardTypeElement.textContent = workerTypeToType[object.offer.type];
     cardCapacityElement.textContent = object.offer.rooms + ' комнаты для ' + object.offer.guests + ' гостей';
     cardTimeElement.textContent = 'заезд после ' + object.offer.checkin + ', выезд до' + object.offer.checkout;
     cardDescriptionElement.textContent = object.offer.description;
