@@ -98,7 +98,7 @@
     window.Util.toggleInputs(adsFilterElements); // Разблокируем поля фильтров
   }
 
-  function renderFilterAds(data) {
+  var renderFilterAds = window.debounce(function (data) {
     var checkedFeatures = getCheckedFeatures();
 
     var filterData = checkNeedFilter(data, housingTypeElement, filterType);
@@ -108,7 +108,7 @@
     filterData = checkNeedFilter(filterData, checkedFeatures, filterFeatures);
 
     window.map.renderPins(filterData.slice(0, MAX_NUMBER_ADS));
-  }
+  });
 
   window.filter = {
     toggle: filterToggle,
