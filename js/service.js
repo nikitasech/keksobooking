@@ -32,31 +32,11 @@
       checkoutElement: adFormElement.querySelector('#timeout'),
     },
 
-    Data: {
-      types: ['palace', 'flat', 'house', 'bungalo'],
-      checks: ['12:00', '13:00', '14:00'],
-      features: ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
-      photos: ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'],
-      TypesTranslate: {
-        'palace': 'Дворец',
-        'flat': 'Квартира',
-        'house': 'Дом',
-        'bungalo': 'Бунгало',
-      },
-    },
-
     Pin: {
       WIDTH: PIN_WIDTH,
       HEIGHT: PIN_HEIGHT,
       SORCE_X: mainPinElement.offsetLeft,
       SORCE_Y: mainPinElement.offsetTop,
-    },
-
-    MapLimits: {
-      TOP: 130,
-      BOTTOM: 630,
-      LEFT: 0,
-      RIGHT: mapElement.offsetWidth,
     },
 
     KeyCodes: {

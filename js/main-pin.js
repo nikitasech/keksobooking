@@ -7,7 +7,14 @@
   var addressFieldElement = window.service.elements.addressFieldElement;
 
   var Pin = window.service.Pin;
-  var MapLimits = window.service.MapLimits;
+
+  var MapLimits = {
+    TOP: 130,
+    BOTTOM: 630,
+    LEFT: 0,
+    RIGHT: mapElement.offsetWidth,
+  };
+
   var KeyCodes = window.service.KeyCodes;
 
   function getPositionXPin(element) {
