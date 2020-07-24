@@ -71,8 +71,8 @@
       }
 
       if (checkedFeatures.length) {
-        isCoincidenceFeatures = !checkedFeatures.some(function (feature) {
-          return ad.offer.features.includes(feature) === false;
+        isCoincidenceFeatures = checkedFeatures.every(function (feature) {
+          return ad.offer.features.includes(feature);
         });
       }
 

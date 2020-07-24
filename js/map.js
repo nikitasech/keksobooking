@@ -81,7 +81,7 @@
     }
   }
 
-  function renderPins(data) {
+  var renderPins = window.debounce(function (data) {
     var pinsElements = pinsContainerElement.querySelectorAll('.map__pin');
     var filterData = window.filter.adsFilter(data);
 
@@ -100,7 +100,7 @@
     closeCard();
 
     window.Util.renderElements(pins.slice(0, MAX_NUMBER_ADS), pinsContainerElement); // Отрисовываем маркеры
-  }
+  });
 
   function addListenersPins(pins, cards) {
     // Вешаем на каждый маркер обработчики событий
