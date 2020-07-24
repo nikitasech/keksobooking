@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var MAX_NUMBER_ADS = window.service.MAX_NUMBER_ADS;
   var adsFilterElements = window.service.elements.adsFilterElements;
   var filtersContainerElement = window.service.elements.filtersContainerElement;
 

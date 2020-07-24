@@ -8,37 +8,35 @@
     'bungalo': 'Бунгало',
   };
 
-  function createImagesElements(object, cardElement) {
-    var cardPhotosElement = cardElement.querySelector('.popup__photos');
+  function createImagesElements(photos, photosElement) {
+    photosElement.innerHTML = ''; // Очищаем контейнер фотографий
 
-    cardPhotosElement.innerHTML = ''; // Очищаем контейнер фотографий
-
-    object.offer.photos.forEach(function (urlPhoto) {
+    photos.forEach(function (urlPhoto) {
       var photoElement = new Image(45, 40); // Создаём изображение
 
       photoElement.classList.add('popup__photo'); // Добавляем класс
       photoElement.alt = 'Фотография жилья'; // Добавляем альтернативный текст
       photoElement.src = urlPhoto; // Добавляем ссылку
 
-      cardPhotosElement.appendChild(photoElement); // Вставляем изображение
+      photosElement.appendChild(photoElement); // Вставляем изображение
     });
 
-    return cardPhotosElement;
+    return photosElement;
   }
 
-  function createFeaturesElements(object, cardElement) {
-    var cardFeaturesElement = cardElement.querySelector('.popup__features');
+  function createFeaturesElements(features, featuresElement) {
+    features.forEach(function (item) {
+      featuresElement.innerHTML = ''; // Очищаем контейнер преимуществ
 
-    object.offer.features.forEach(function (item) {
       var featureElement = document.createElement('li'); // Создаём елемент списка
 
       featureElement.classList.add('popup__feature'); // Добавляем класс
       featureElement.classList.add('popup__feature--' + item); // Добавляем модификатор
 
-      cardFeaturesElement.appendChild(featureElement); // Вставляем элемент списка
+      featuresElement.appendChild(featureElement); // Вставляем элемент списка
     });
 
-    return cardFeaturesElement;
+    return featuresElement;
   }
 
   function createCardElement(object) {
@@ -53,23 +51,37 @@
     var cardTypeElement = cardElement.querySelector('.popup__type');
     var cardCapacityElement = cardElement.querySelector('.popup__text--capacity');
     var cardTimeElement = cardElement.querySelector('.popup__text--time');
-    var cardFeaturesElement = cardElement.querySelector('.popup__features');
     var cardDescriptionElement = cardElement.querySelector('.popup__description');
     var cardAvatarElement = cardElement.querySelector('.popup__avatar');
+    var photosElement = cardElement.querySelector('.popup__photos');
+    var featuresElement = cardElement.querySelector('.popup__features');
 
-    cardTitleElement.textContent = object.offer.title;
-    cardAddressElement.textContent = object.offer.address;
-    cardPriceElement.textContent = object.offer.price + '₽/ночь';
-    cardTypeElement.textContent = workerTypeToType[object.offer.type];
-    cardCapacityElement.textContent = object.offer.rooms + ' комнаты для ' + object.offer.guests + ' гостей';
-    cardTimeElement.textContent = 'заезд после ' + object.offer.checkin + ', выезд до' + object.offer.checkout;
-    cardDescriptionElement.textContent = object.offer.description;
-    cardAvatarElement.src = object.author.avatar;
+    function fillElement(data, element, property) {
+      if (property) {
+        element[property] = data;
+      } else {
+        element.textContent = data;
+      }
+    }
 
-    cardFeaturesElement.innerHTML = ''; // Очищаем контейнер преимуществ
+    function fillCard(data, element, callback, property) {
+      if (data && data.length) {
+        callback(data, element, property);
+      } else {
+        element.remove();
+      }
+    }
 
-    createImagesElements(object, cardElement); // Заполняем контейнер фотографиями
-    createFeaturesElements(object, cardElement); // Заполняем контейнер преимуществами
+    fillCard(object.offer.title, cardTitleElement, fillElement);
+    fillCard(object.offer.address, cardAddressElement, fillElement);
+    fillCard(object.offer.price, cardPriceElement, fillElement);
+    fillCard(workerTypeToType[object.offer.type], cardTypeElement, fillElement);
+    fillCard(object.offer.rooms + ' комнаты для ' + object.offer.guests + ' гостей', cardCapacityElement, fillElement);
+    fillCard('заезд после ' + object.offer.checkin + ', выезд до' + object.offer.checkout, cardTimeElement, fillElement);
+    fillCard(object.offer.description, cardDescriptionElement, fillElement);
+    fillCard(object.author.avatar, cardAvatarElement, fillElement, 'src');
+    fillCard(object.offer.photos, photosElement, createImagesElements);
+    fillCard(object.offer.features, featuresElement, createFeaturesElements);
 
     return cardElement;
   }
