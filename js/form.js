@@ -16,6 +16,11 @@
   var checkinElement = window.service.elements.checkinElement;
   var filtersElement = window.service.elements.filtersFormElement;
   var adFormResetElement = adFormElement.querySelector('.ad-form__reset');
+  var сhooserAvatarElement = document.querySelector('.ad-form-header__input');
+  var сhooserPhotoElement = document.querySelector('.ad-form__input');
+  var previewAvatarElement = document.querySelector('.ad-form-header__preview > img');
+  var photoContainerElement = document.querySelector('.ad-form__photo-container');
+  var previewPhotoElement = photoContainerElement.querySelector('.ad-form__photo');
 
   var typeToMinPrice = {
     'bungalo': '0',
@@ -160,12 +165,28 @@
     throwOff();
   }
 
+  function onAvatarChange(evt) {
+    window.preview.download(previewAvatarElement, evt.currentTarget);
+  }
+
+  function onPtotoHouseChange(evt) {
+    var previewPhotoClone = previewPhotoElement.cloneNode(false);
+    previewPhotoElement.remove();
+
+    var imagePhoto = new Image(40, 44);
+    window.preview.download(imagePhoto, evt.currentTarget);
+    previewPhotoClone.appendChild(imagePhoto);
+    window.Util.renderElements(previewPhotoClone, photoContainerElement);
+  }
+
   function addListenersForm() {
     typeHousingElement.addEventListener('change', onPriceChange); // Добавляем обработчик валидации цены
     checkinElement.addEventListener('change', onChecksChange); // Добавляем обработчик валидации заезда
     checkoutElement.addEventListener('change', onChecksChange); // Добавляем обработчик валидации выезда
     roomNumberElement.addEventListener('change', onCapacitiesChange); // Добавляем обработчик валидации кол-ва комнат
     capacityElement.addEventListener('change', onCapacitiesChange); // Добавляем обработчик валидации вместимости
+    сhooserAvatarElement.addEventListener('change', onAvatarChange); // Добавляем обработчик добавления аватара
+    сhooserPhotoElement.addEventListener('change', onPtotoHouseChange); // Добавляем обработчик добавления фотографий объявления
     adFormElement.addEventListener('submit', onFormSubmit); // Добавляем обработчик отправки формы
     adFormResetElement.addEventListener('click', onReset); // Добавляем обработчик сброса
   }
@@ -176,6 +197,8 @@
     checkoutElement.removeEventListener('change', onChecksChange); // Удляем обработчик валидации выезда
     roomNumberElement.removeEventListener('change', onCapacitiesChange); // Удляем обработчик валидации кол-ва комнат
     capacityElement.removeEventListener('change', onCapacitiesChange); // Удляем обработчик валидации вместимости
+    сhooserAvatarElement.removeEventListener('change', onAvatarChange); // Удляем обработчик добавления аватара
+    сhooserPhotoElement.removeEventListener('change', onPtotoHouseChange); // Удляем обработчик добавления фотографий объявления
     adFormElement.removeEventListener('submit', onFormSubmit); // Удляем обработчик отправки формы
     adFormResetElement.removeEventListener('click', onReset); // Удляем обработчик сброса
   }
