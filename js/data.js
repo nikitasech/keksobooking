@@ -7,7 +7,7 @@
   var mainElement = window.service.elements.mainElement;
 
   function onLoadDataSuccess(data) {
-    var ads = data;
+    var ads = window.filter.adsFilter(data); // Заранее проверим метки на соответствие фильтрам
     var pinsElements = ads.map(window.pin.createElement); // Формируем массив элементов меток
     var cardsElements = ads.map(window.card.createElement); // Создаем массив из карточек
 
@@ -18,7 +18,7 @@
     });
 
     window.Util.renderElements(pinsElements.slice(0, NUMBER_ADS), pinsContainerElement); // Отрисовываем метки
-    window.adsData = ads;
+    window.adsData = data;
   }
 
   function onLoadDataError(message) {

@@ -32,7 +32,7 @@
 
         // Вешаем обработчик на фильтры
         filtersFormElement.addEventListener('change', function () {
-          window.filter.render(window.adsData);
+          window.map.renderPins(window.adsData);
         });
       }
     }
@@ -47,7 +47,7 @@
 
         // Вешаем обработчик на фильтры
         filtersFormElement.addEventListener('change', function () {
-          window.filter.render(window.adsData);
+          window.map.renderPins(window.adsData);
         });
       }
     }

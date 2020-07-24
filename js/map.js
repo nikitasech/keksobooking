@@ -83,10 +83,11 @@
 
   function renderPins(data) {
     var pinsElements = pinsContainerElement.querySelectorAll('.map__pin');
+    var filterData = window.filter.adsFilter(data);
 
     // Создаем массивы элементов меток и карточек
-    var pins = data.map(window.pin.createElement);
-    var cards = data.map(window.card.createElement);
+    var pins = filterData.map(window.pin.createElement);
+    var cards = filterData.map(window.card.createElement);
 
     window.map.addListenersPins(pins, cards); // Вешаем обработчики кликов на маркеры
 

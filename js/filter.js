@@ -18,19 +18,6 @@
     HIGH_MIN: 50000
   };
 
-  function checkNeedFilter(data, element, callback) {
-    var filterData;
-
-    /* Если выбираем пункт не требующий фильтрации - в переменную отфильтрованных
-    объявлений записываеются все объявления. Иначе фильтруются по типу */
-    if (element.value === 'any' || !element.length) {
-      filterData = data;
-    } else {
-      filterData = callback(data);
-    }
-    return filterData;
-  }
-
   function getCheckedFeatures() {
     var featuresElements = featuresElement.querySelectorAll('[name=features]');
     var checkedFeatures = [];
@@ -43,75 +30,64 @@
     return checkedFeatures;
   }
 
-  function filterType(data) {
-    return data.filter(function (ad) {
-      return ad.offer.type === housingTypeElement.value;
-    });
-  }
-
-  function filterPrice(data) {
-    return data.filter(function (ad) {
-      if (priceElement.value === 'low') {
-        return ad.offer.price < Price.LOW_MAX;
-      } else if (priceElement.value === 'middle') {
-        return ad.offer.price >= Price.MIDDLE_MIN && ad.offer.price < Price.MIDDLE_MAX;
-      }
-      return ad.offer.price >= Price.HIGH_MIN;
-    });
-  }
-
-  function filterRooms(data) {
-    return data.filter(function (ad) {
-      return +ad.offer.rooms === +roomsElement.value;
-    });
-  }
-
-  function filterGuests(data) {
-    return data.filter(function (ad) {
-      return +ad.offer.guests === +guestsElement.value;
-    });
-  }
-
-  function filterFeatures(data) {
-    return data.filter(function (ad) {
-      var checkedFeatures = getCheckedFeatures();
-      var isCoincidence;
-
-      for (var i = 0; i < checkedFeatures.length; i++) {
-        for (var j = 0; j < ad.offer.features.length; j++) {
-          if (checkedFeatures[i] === ad.offer.features[j]) {
-            isCoincidence = true;
-            break;
-          } else {
-            isCoincidence = false;
-          }
-        }
-        if (!isCoincidence) {
-          return false;
-        }
-      }
-      return true;
-    });
-  }
-
   function filterToggle() {
     window.Util.toggleInputs(adsFilterElements); // Разблокируем поля фильтров
   }
 
-  var renderFilterAds = window.debounce(function (data) {
+  function checkAny(element) {
+    return element.value !== 'any';
+  }
+
+  function filterAds(data) {
     var checkedFeatures = getCheckedFeatures();
 
-    var filterData = checkNeedFilter(data, housingTypeElement, filterType)
-    .checkNeedFilter(filterData, priceElement, filterPrice)
-    .checkNeedFilter(filterData, roomsElement, filterRooms)
-    .checkNeedFilter(filterData, guestsElement, filterGuests)
-    .checkNeedFilter(filterData, checkedFeatures, filterFeatures);
+    return data.filter(function (ad) {
+      var isCoincidenceType = true;
+      var isCoincidencePrice = true;
+      var isCoincidenceRooms = true;
+      var isCoincidenceGuests = true;
+      var isCoincidenceFeatures = true;
+      var isExistOffer = Boolean(ad.offer);
 
-    window.map.renderPins(filterData.slice(0, MAX_NUMBER_ADS));
-  });
+      if (checkAny(housingTypeElement)) {
+        isCoincidenceType = ad.offer.type === housingTypeElement.value;
+      }
+
+      if (checkAny(priceElement)) {
+        if (priceElement.value === 'low') {
+          isCoincidencePrice = ad.offer.price < Price.LOW_MAX;
+        } else if (priceElement.value === 'middle') {
+          isCoincidencePrice = ad.offer.price >= Price.MIDDLE_MIN && ad.offer.price < Price.MIDDLE_MAX;
+        } else {
+          isCoincidencePrice = ad.offer.price >= Price.HIGH_MIN;
+        }
+      }
+
+      if (checkAny(roomsElement)) {
+        isCoincidenceRooms = +ad.offer.rooms === +roomsElement.value;
+      }
+
+      if (checkAny(guestsElement)) {
+        isCoincidenceGuests = +ad.offer.guests === +guestsElement.value;
+      }
+
+      if (checkedFeatures.length) {
+        isCoincidenceFeatures = !checkedFeatures.some(function (feature) {
+          return ad.offer.features.includes(feature) === false;
+        });
+      }
+
+      return isCoincidenceType
+        && isCoincidencePrice
+        && isCoincidenceRooms
+        && isCoincidenceGuests
+        && isCoincidenceFeatures
+        && isExistOffer;
+    });
+  }
 
   window.filter = {
     toggle: filterToggle,
-    render: renderFilterAds
+    adsFilter: filterAds
   };
 })();
