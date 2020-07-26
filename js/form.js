@@ -242,6 +242,7 @@
     } else {
       window.Util.toggleInputs(adFieldsetElements); // Разблокируем поля добавления объявления
       validateСapacities(); // Вызываем валидации вместимости
+      validatePrice(); // Вызываем валидацию цены
       addListenersForm(); // Повесим обработчики формы
     }
   }
