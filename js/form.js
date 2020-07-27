@@ -2,6 +2,7 @@
 
 (function () {
   var SAVE_URL = 'https://javascript.pages.academy/keksobooking';
+  var INITIAL_AVATAR_SRC = 'img/muffin-grey.svg';
 
   var mainPinElement = window.service.elements.mainPinElement;
   var mainElement = window.service.elements.mainElement;
@@ -128,6 +129,49 @@
     }
   }
 
+  function throwOff() {
+    window.map.toggle();
+    mainPinElement.style.left = Pin.SORCE_X + 'px';
+    mainPinElement.style.top = Pin.SORCE_Y + 'px';
+
+    window.form.toggle();
+    adFormElement.reset();
+    trowOffPhotoPreviews();
+    addressFieldElement.value = window.mainPin.getPosition(mainPinElement);
+
+    window.filter.toggle();
+    filtersElement.reset();
+  }
+
+  function trowOffPhotoPreviews() {
+    var imageElements = adFormElement.querySelectorAll('.ad-form__photo');
+    var initialImageElement = previewPhotoElement.cloneNode(false);
+
+    // forEach не использван, так как
+    // нужно пройтись не по всем элементам
+    for (var i = 0; i < imageElements.length; i++) {
+      imageElements[i].remove();
+    }
+    photoContainerElement.appendChild(initialImageElement);
+    previewAvatarElement.src = INITIAL_AVATAR_SRC;
+  }
+
+  function loadPhoto(currentTarget) {
+    var lastPreviewElement = adFormElement.querySelector('.ad-form__photo:last-child');
+    var imagePhoto = new Image(40, 44);
+    window.preview.download(imagePhoto, currentTarget);
+    var insertContainerElement;
+
+    if (!lastPreviewElement.querySelector('img')) {
+      insertContainerElement = lastPreviewElement;
+    } else {
+      insertContainerElement = previewPhotoElement.cloneNode(false);
+    }
+
+    insertContainerElement.appendChild(imagePhoto);
+    window.Util.renderElements(insertContainerElement, photoContainerElement);
+  }
+
   function onPriceChange() {
     validatePrice();
   }
@@ -147,19 +191,6 @@
     window.backend.askResponce('POST', SAVE_URL, onSaveSuccess, onSaveError, data);
   }
 
-  function throwOff() {
-    window.map.toggle();
-    mainPinElement.style.left = Pin.SORCE_X + 'px';
-    mainPinElement.style.top = Pin.SORCE_Y + 'px';
-
-    window.form.toggle();
-    adFormElement.reset();
-    addressFieldElement.value = window.mainPin.getPosition(mainPinElement);
-
-    window.filter.toggle();
-    filtersElement.reset();
-  }
-
   function onReset(evt) {
     evt.preventDefault();
     throwOff();
@@ -169,14 +200,8 @@
     window.preview.download(previewAvatarElement, evt.currentTarget);
   }
 
-  function onPtotoHouseChange(evt) {
-    var previewPhotoClone = previewPhotoElement.cloneNode(false);
-    previewPhotoElement.remove();
-
-    var imagePhoto = new Image(40, 44);
-    window.preview.download(imagePhoto, evt.currentTarget);
-    previewPhotoClone.appendChild(imagePhoto);
-    window.Util.renderElements(previewPhotoClone, photoContainerElement);
+  function onPhotoHouseChange(evt) {
+    loadPhoto(evt.currentTarget);
   }
 
   function addListenersForm() {
@@ -186,7 +211,7 @@
     roomNumberElement.addEventListener('change', onCapacitiesChange); // Добавляем обработчик валидации кол-ва комнат
     capacityElement.addEventListener('change', onCapacitiesChange); // Добавляем обработчик валидации вместимости
     сhooserAvatarElement.addEventListener('change', onAvatarChange); // Добавляем обработчик добавления аватара
-    сhooserPhotoElement.addEventListener('change', onPtotoHouseChange); // Добавляем обработчик добавления фотографий объявления
+    сhooserPhotoElement.addEventListener('change', onPhotoHouseChange); // Добавляем обработчик добавления фотографий объявления
     adFormElement.addEventListener('submit', onFormSubmit); // Добавляем обработчик отправки формы
     adFormResetElement.addEventListener('click', onReset); // Добавляем обработчик сброса
   }
@@ -198,7 +223,7 @@
     roomNumberElement.removeEventListener('change', onCapacitiesChange); // Удляем обработчик валидации кол-ва комнат
     capacityElement.removeEventListener('change', onCapacitiesChange); // Удляем обработчик валидации вместимости
     сhooserAvatarElement.removeEventListener('change', onAvatarChange); // Удляем обработчик добавления аватара
-    сhooserPhotoElement.removeEventListener('change', onPtotoHouseChange); // Удляем обработчик добавления фотографий объявления
+    сhooserPhotoElement.removeEventListener('change', onPhotoHouseChange); // Удляем обработчик добавления фотографий объявления
     adFormElement.removeEventListener('submit', onFormSubmit); // Удляем обработчик отправки формы
     adFormResetElement.removeEventListener('click', onReset); // Удляем обработчик сброса
   }
